@@ -1,0 +1,26 @@
+<div class="home" ng-controller='HomeController'>
+	<div class="home_container">
+	<h1>Scheduler</h1>
+	<p>The ultimate website to schedule your classes </p>
+	<h4>Sign in or create an account</h4>
+	<div class="loginWrapper">
+		<button class="button login_btn" ng-click="open_loginForm()">Log in</button>
+		<form data-abide ng-submit="loginForm.$valid && login()" name="loginForm" class="login_Form">
+			<input type="text" required ng-model="login_email" placeholder="Your email">
+			<input type="text" required ng-model="login_password" placeholder="Password">
+			<button class="button" type="submit" id="submit" value="Submit" >Log in!</button>
+		</form>
+	</div>
+
+	<div class="signupWrapper">
+		<button class="button signup_btn" ng-click="open_signupForm()">Sign up</button>
+		<form data-abide ng-submit="signupForm.$valid && addUser()" name="signupForm" class="signup_Form">
+			<input type="text" required ng-model="signup_email" placeholder="Email">
+			<input type="text" required ng-model="signup_name" placeholder="Name">
+			<input type="text" required ng-model="signup_password" placeholder="Please create a password">
+			<input type="text" required placeholder="Please re-enter your password">
+			<button class="button" type="submit" id="submit" value="Submit" >Sign up!</button>
+		</form>
+	</div>
+	</div>
+</div>

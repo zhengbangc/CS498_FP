@@ -35,3 +35,12 @@ mp4Controllers.controller('SettingsController', ['$scope' , '$window' , function
   };
 
 }]);
+
+mp4Controllers.controller('HomeController', ['$scope' , '$window' , function($scope, $window) {
+    $scope.open_loginForm = function(){
+       $('.login_Form').toggleClass('extended');
+    }
+    $scope.open_signupForm = function(){
+      $('.signup_Form').toggleClass('extended');
+    }
+}]);
