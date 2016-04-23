@@ -17,8 +17,7 @@
 |---|---|
 |id|int|
 |name|string|
-|sections|array of Section|
-|required|array of int|
+|required|string|
 
 ### Section
 |Name|Type|
@@ -38,7 +37,6 @@
 |name|string|
 |email|string|
 |hash|string|
-|calendars|array of Calendar|
 
 ### Schedule
 |Name|Type|
