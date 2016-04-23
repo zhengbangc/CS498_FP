@@ -60,11 +60,10 @@ ul.grid{
 		width: $schedule-box-size;
 		height: $schedule-box-size;
 		border: 2px solid $main-theme-color;
-	}
 
-	&:hover{
-		border: 2px solid $main-theme-color;
-		opacity: 0.5;
+		&:hover{
+			border: 2px dotted $main-theme-color;
+		}
 	}	
 
 }
