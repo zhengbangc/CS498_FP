@@ -12,23 +12,16 @@ mp4Controllers.controller('FirstController', ['$scope', 'CommonData'  , function
 
 }]);
 
-mp4Controllers.controller('SecondController', ['$scope', 'CommonData' , function($scope, CommonData) {
-  $scope.data = "";
 
-  $scope.getData = function(){
-    $scope.data = CommonData.getData();
+mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  CommonData, $window) {
 
-  };
-
-}]);
-
-
-mp4Controllers.controller('LlamaListController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
-
-  Llamas.get().success(function(data){
+/*  CommonData.get().success(function(data){
     $scope.llamas = data;
   });
+*/
+  // Need to get all of a user's schedules
 
+  
 
 }]);
 
