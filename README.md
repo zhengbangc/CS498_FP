@@ -37,6 +37,7 @@
 |id|int|
 |name|string|
 |email|string|
+|hash|string|
 |calendars|array of Calendar|
 
 ### Schedule
