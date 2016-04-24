@@ -1,0 +1,24 @@
+<div class="createschedule" ng-controller='HomeController'>
+	<div class="body_container">
+			<div class="header">
+			<h1>Create Schedule</h1>
+			<p>Generate a schedule for your semester</p>
+			</div>
+			<div class="createWrapper">
+				<form data-abide ng-submit="loginForm.$valid && login()" name="loginForm" class="login_Form">
+					<label> Please enter the title of the schedule</label>
+						<input type="text" required ng-model="schedule_title" placeholder="Schedule Title">
+					<label>Please select a semster for this schedule</label>
+					<select ng-model="semester">
+						<option value="Spring 2016">Spring 2016</option>
+						<option value="Fall 2016">Fall 2016</option>
+						<option value="Spring 2017">Spring 2017</option>
+					</select>
+					<div class="row">
+						<button class="button columns col-xs-6">Auto</button>
+						<button class="button columns col-xs-6">Manual</button>
+					</div>
+				</form>
+			</div>
+	</div>
+</div>

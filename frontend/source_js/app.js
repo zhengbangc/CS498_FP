@@ -6,8 +6,8 @@ app.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/home.html',
     controller: 'HomeController'
   }).
-  when('/create', {
-    templateUrl: 'partials/create.html',
+  when('/createschedule', {
+    templateUrl: 'partials/createschedule.html',
     controller: 'CreateController'
   }).
   when('/myschedules', {
