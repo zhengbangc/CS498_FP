@@ -47,10 +47,20 @@ mp4Controllers.controller('SettingsController', ['$scope' , '$window' , function
 }]);
 
 mp4Controllers.controller('HomeController', ['$scope' , '$window' , function($scope, $window) {
+    $scope.open_body = function(){
+      $('.body_container').addClass('open');
+      $('.home_container button').addClass('open');
+    }
     $scope.open_loginForm = function(){
        $('.login_Form').toggleClass('extended');
     }
+    $scope.close_loginForm = function(){
+      $('.login_Form').toggleClass('extended');
+    }
     $scope.open_signupForm = function(){
       $('.signup_Form').toggleClass('extended');
+    }
+    $scope.close_signupForm = function(){
+      $('.signup_Form').toggleClass('extended'); 
     }
 }]);
