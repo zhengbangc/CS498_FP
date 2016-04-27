@@ -51,6 +51,27 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
 
 }]);
 
+mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+
+/*  Classes.getBySemester().success(function(data){
+    $scope.classes = data.data;
+  });
+*/
+  // Need to get all classes for the selected semester
+
+  $scope.class = '';
+  $scope.schedule = { 'name': 'My First Schedule' };
+
+  $scope.toggleCalendar = function(){
+    console.log('gonna expand calendar now');
+    $('.calendar').toggleClass('large-8 large-12'); //change large-8 to large-12 or vice versa
+    //find calendar div
+    //expand it to span all 12 columns
+  };
+
+
+}]);
+
 mp4Controllers.controller('SettingsController', ['$scope' , '$window' , function($scope, $window) {
   $scope.url = $window.sessionStorage.baseurl;
 

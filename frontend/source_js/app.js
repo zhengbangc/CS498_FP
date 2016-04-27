@@ -14,10 +14,22 @@ app.config(['$routeProvider', function($routeProvider) {
     templateUrl: 'partials/myschedules.html',
     controller: 'MySchedulesController'
   }).
-  when('/scheduledetail', {
-    templateUrl: 'partials/scheduledetail.html',
-    controller: 'ScheduleDetailController'
+  when('/schedule/:_id', {
+    templateUrl: 'partials/editschedule.html',
+    controller: 'EditScheduleController'
   }).
+  when('/edituser', {
+    templateUrl: 'partials/edituser.html',
+    controller: 'EditUserController'
+  }).
+  when('/editschedule', {
+    templateUrl: 'partials/editschedule.html',
+    controller: 'EditScheduleController'
+  }).
+  when('/autoschedule', {
+    templateUrl: 'partials/autoschedule.html',
+    controller: 'AutoScheduleController'
+  }).  
   otherwise({
     redirectTo: '/home'
   });

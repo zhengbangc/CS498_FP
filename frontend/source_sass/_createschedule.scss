@@ -36,15 +36,8 @@
 			width: 100%;
 			min-height: 100px;
 			.button{
-				background-color: $main-theme-color;
 				width: 100px;
-				font-family: $OpenSans;
-				letter-spacing: 0.5px;
-				border-radius: 20px;
-				&:hover, &:focus {
-					background-color: $main-theme-darker2;
-				}
-				//@include transition(all 0.5s ease-in-out);
+				@extend .round-button;
 			}
 			.login_Form{
 				position: absolute;

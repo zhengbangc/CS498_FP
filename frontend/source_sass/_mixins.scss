@@ -12,3 +12,10 @@
 	-moz-transition: $transition;
 	-o-transition: $transition;
 }
+
+
+@mixin boxshadow(){
+	-webkit-box-shadow: 0px 10px 49px -12px rgba(0,0,0,1);
+	-moz-box-shadow: 0px 10px 49px -12px rgba(0,0,0,1);
+	box-shadow: 0px 10px 49px -12px rgba(0,0,0,1);
+}

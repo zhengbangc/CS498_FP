@@ -1,0 +1,62 @@
+<div class="main" ng-controller='EditScheduleController'>
+
+	<div class="row text-center">
+		<h1>{{ schedule.name }}</h1>
+	</div>
+
+	<div class="row expanded text-center">
+
+		<div class="callout addclass columns small-12 large-4" data-closable>
+			<h3>Add a Class</h3>
+
+			This bar pops up when a user chooses to manually edit a schedule.<br><br>
+
+			<input ng-model="class.name" type="text" placeholder="Search for a class">
+
+			<button class="button" ng-click="addClass()">Add Class</button>
+
+			<div class="close-menu">
+				<button ng-click="toggleCalendar()" class="close-button" aria-label="Close modal" type="button" data-close><span aria-hidden="true">&times;</span></button>
+			</div>
+		</div>
+
+		<div class="calendar columns small-12 large-8">
+			Calendar display will be here <br>
+		</div>
+
+
+		
+	</div>
+
+
+
+
+
+
+
+
+<!---- Navigation Bar ---->
+    <nav>
+        <a class="button" href="#/home">SCHEDULER</a>
+        <a class="button" href="#/createschedule">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span class="invisible-small"> Create Schedule</span>
+        </a>
+        <a class="button" href="#/myschedules">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            <span class="invisible-small"> My Schedules</span>
+        </a>
+
+            <span class="dropdown">
+        <a class="dropbutton button"> 
+            {{ user.name }} <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+         <div class="dropdown-content">
+            <a href="#/edituser">Edit Account</a>
+            <a ng-click="logout()">Log Out</a>
+          </div>
+        </span>
+    </nav>
+    <!---- End Navigation Bar ---->
+
+</div>

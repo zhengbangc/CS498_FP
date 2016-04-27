@@ -6,11 +6,7 @@ h1{
 	text-align: center;
 }
 
-h2{
-	font-family: $OpenSans;
-}
-
-h3{
+h2, h3{
 	font-family: $OpenSans;
 }
 
@@ -20,18 +16,20 @@ p{
 	font-weight: 300;
 }
 
-.invisible-small{
-	@include breakpoint(small only) { //hide this on small screens
-		display: none;
-	}
+.invisible-small{ //hide things with this class on small screens
+	@include breakpoint(small only) { display: none; }
 }
 
 .button{
 	background-color: $main-theme-color;
+	font-family: $OpenSans;
+	letter-spacing: 0.5px;
 	&:hover, &:active, &:focus {
 		background-color: $main-theme-darker2;
+		outline: 0;
 	}
 }
+.round-button{ border-radius: 20px; }
 
 // ******** NAVIGATION BAR *********
 nav {
