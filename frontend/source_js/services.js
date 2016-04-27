@@ -1,22 +1,26 @@
 var mp4Services = angular.module('mp4Services', []);
 
-mp4Services.factory('CommonData', function(){
-    var data = "";
-    return{
-        getData : function(){
-            return data;
+mp4Services.factory('Schedules', function(){
+    var baseUrl = '/api/schedules'; //REPLACE W/ DATABASE URL
+    return {
+        get: function(userID){
+            return $http.get(baseUrl);
         },
-        setData : function(newData){
-            data = newData;
+        getByUser: function(userID){
+            var where = '?where={ \"user\": \"' + userID.toString() + '\"}';    //or whatever
+            return $http.get(baseUrl + where);
+        },
+        add: function(newSchedule){
+            return $http.post(baseUrl, newSchedule);
         }
     }
 });
 
-mp4Services.factory('Llamas', function($http, $window) {
+mp4Services.factory('Users', function($http, $window) {
+    var baseUrl = '/api/users'; //REPLACE W/ DATABASE URL
     return {
-        get : function() {
-            var baseUrl = $window.sessionStorage.baseurl;
-            return $http.get(baseUrl+'/api/llamas');
+        get: function() {
+            return $http.get(baseUrl);
         }
     }
 });

@@ -1,4 +1,5 @@
 <div class="createschedule" ng-controller='CreateScheduleController'>
+
 	<div class="body_container">
 			<div class="header">
 			<h1>Create Schedule</h1>
@@ -6,8 +7,8 @@
 			</div>
 			<div class="createWrapper">
 				<form data-abide ng-submit="createSchedule()" name="loginForm" class="login_Form">
-					<label> Please enter a title for this schedule</label>
-						<input type="text" required ng-model="schedule_title" placeholder="Schedule Title">
+					<label> Please enter a name for this schedule</label>
+						<input type="text" required ng-model="schedule_title" placeholder="Schedule Name">
 					<label>Please select a semester for this schedule</label>
 					<select ng-model="semester">
 						<option value="Spring 2016">Spring 2016</option>

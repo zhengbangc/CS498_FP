@@ -1,5 +1,6 @@
 // Navigation bar
 nav {
+	z-index: 999;
 	width: 100%;
 	height: $nav-height;
 	margin: 0px;
@@ -10,6 +11,9 @@ nav {
 
 	.button{
 		background-color: $main-theme-color;
+		&:hover, &:active, &:focus {
+			background-color: $main-theme-darker2;
+		}
 	}
 
 	/* Dropdown menu */
@@ -59,10 +63,10 @@ ul.grid{
 		display: inline-block;
 		width: $schedule-box-size;
 		height: $schedule-box-size;
-		border: 2px solid $main-theme-color;
+		border: 2px solid $main-theme-lighter3;
 
 		&:hover{
-			border: 2px dotted $main-theme-color;
+			border: 2px solid $main-theme-darker1;
 		}
 	}	
 
@@ -70,9 +74,15 @@ ul.grid{
 
 .main{
 	margin-top: $nav-height;	//avoid overlap with nav bar
-	padding-top: 10px;			//not necessary but looks prettier
+	padding-top: 10px;			//want some space between bottom of nav bar and top of real content
 }
 
 .padded{
 	padding: 30px 0px;
+}
+
+.invisible-small{
+	@include breakpoint(small only) { //hide this on small screens
+		display: none;
+	}
 }
