@@ -28,6 +28,9 @@ p{
 		background-color: $main-theme-darker2;
 		outline: 0;
 	}
+	&.round{
+		border-radius: 20px;
+	}
 }
 .round-button{ border-radius: 20px; }
 

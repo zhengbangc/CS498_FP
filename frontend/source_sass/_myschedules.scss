@@ -7,23 +7,21 @@ ul.grid{
     display: inline;
 
 	li {
+		margin: 50px;
 		color: #000000;
 		display: table-cell; 
 		vertical-align: middle;
 		width: $schedule-box-size;
 		height: $schedule-box-size;
 		border: 2px solid $main-theme-lighter3;
-
-		&:hover{
-			border: 2px solid $main-theme-darker1;
-		}
+		&:hover{ border: 2px solid $main-theme-darker1; }
 	}	
 
 }
 
 .main{
-	margin-top: $nav-height;	//avoid overlap with nav bar
-	padding-top: 10px;	//want some space between bottom of nav bar and top of real content
+	margin-top: $nav-height;	// NECESSARY: avoid overlap with nav bar
+	padding-top: 40px;	// want some space between bottom of nav bar and top of real content
 }
 
 .padded{

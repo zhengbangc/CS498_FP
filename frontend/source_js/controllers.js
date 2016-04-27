@@ -1,17 +1,5 @@
 var mp4Controllers = angular.module('mp4Controllers', []);
 
-mp4Controllers.controller('FirstController', ['$scope', 'CommonData'  , function($scope, CommonData) {
-  $scope.data = "";
-   $scope.displayText = ""
-
-  $scope.setData = function(){
-    CommonData.setData($scope.data);
-    $scope.displayText = "Data set"
-
-  };
-
-}]);
-
 
 mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
@@ -35,6 +23,10 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
 
 }]);
 
+
+
+
+
 mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
 /*  Classes.getBySemester().success(function(data){
@@ -51,6 +43,26 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
 
 }]);
 
+
+
+mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+
+/*  Classes.getBySemester().success(function(data){
+    $scope.classes = data.data;
+  });
+*/
+  // Need to get all classes for the selected semester
+
+  $scope.schedule = { 'name': 'My First Schedule', 'id':666, 'preview': 'preview' };
+  $scope.autoSchedule = function(){
+
+  };
+
+}]);
+
+
+
+
 mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
 /*  Classes.getBySemester().success(function(data){
@@ -62,6 +74,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   $scope.class = '';
   $scope.schedule = { 'name': 'My First Schedule' };
 
+
   $scope.toggleCalendar = function(){
     console.log('gonna expand calendar now');
     $('.calendar').toggleClass('large-8 large-12'); //change large-8 to large-12 or vice versa
@@ -72,16 +85,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
 }]);
 
-mp4Controllers.controller('SettingsController', ['$scope' , '$window' , function($scope, $window) {
-  $scope.url = $window.sessionStorage.baseurl;
 
-  $scope.setUrl = function(){
-    $window.sessionStorage.baseurl = $scope.url;
-    $scope.displayText = "URL set";
 
-  };
-
-}]);
 
 mp4Controllers.controller('HomeController', ['$scope' , '$window' , function($scope, $window) {
     $scope.open_body = function(){
