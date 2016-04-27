@@ -20,6 +20,19 @@ p{
 	font-weight: 300;
 }
 
+.invisible-small{
+	@include breakpoint(small only) { //hide this on small screens
+		display: none;
+	}
+}
+
+.button{
+	background-color: $main-theme-color;
+	&:hover, &:active, &:focus {
+		background-color: $main-theme-darker2;
+	}
+}
+
 // ******** NAVIGATION BAR *********
 nav {
 	z-index: 999;
@@ -70,9 +83,3 @@ nav {
 	    }
 	}
 } // *** END NAVIGATION BAR ***
-
-.invisible-small{
-	@include breakpoint(small only) { //hide this on small screens
-		display: none;
-	}
-}
