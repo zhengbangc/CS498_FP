@@ -5,7 +5,7 @@
 	position: relative;
 	height: 100vh;
 	weight: 100vw;
-	background: linear-gradient(to bottom, #B60C0C 0%, #B60C0C 100%);
+	background: linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%);
 	.home_container{
 		&>button{
 			position: absolute;
@@ -99,12 +99,12 @@
 					&:focus{
 						outline: 0;
 					}
-					background-color: #F75E52;
+					background-color: $main-theme-color;
 					font-family: $OpenSans;
 					letter-spacing: 0.5px;
 					border-radius: 20px;
 					&:hover{
-						background-color: #B60C0C;
+						background-color: $main-theme-darker2;
 					}
 					@include transition(all 0.5s ease-in-out);
 				}
@@ -168,12 +168,12 @@
 					&:focus{
 						outline: 0;
 					}
-					background-color: #F75E52;
+					background-color: $main-theme-color;
 					font-family: $OpenSans;
 					letter-spacing: 0.5px;
 					border-radius: 20px;
 					&:hover{
-						background-color: #B60C0C;
+						background-color: $main-theme-darker2;
 					}
 					@include transition(all 0.5s ease-in-out);
 				}
