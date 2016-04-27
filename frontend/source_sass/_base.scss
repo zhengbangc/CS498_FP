@@ -69,4 +69,10 @@ nav {
 		    }
 	    }
 	}
-} // *** END NAV BAR
+} // *** END NAVIGATION BAR ***
+
+.invisible-small{
+	@include breakpoint(small only) { //hide this on small screens
+		display: none;
+	}
+}

@@ -37,13 +37,15 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
 
 mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
-/*  Schedules.getByUser(user.id).success(function(data){
-    $scope.schedules = data.data;
+/*  Classes.getBySemester().success(function(data){
+    $scope.classes = data.data;
   });
 */
-  // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
+  // Need to get all classes for the selected semester
 
-  $scope.CreateScheduleController = function(){
+  $scope.schedule_title;
+
+  $scope.autoSchedule = function(){
 
   };
 

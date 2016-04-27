@@ -35,26 +35,16 @@
 			@include translate_y(-50%);
 			width: 100%;
 			min-height: 100px;
-			button{
-				display: block;
-				left: 0;
-				right: 0;
-				margin-left: auto;
-				margin-right: auto;
-				position: absolute;
-				z-index: 1;
-				width: 40%;
-				&:focus{
-					outline: 0;
-				}
+			.button{
 				background-color: $main-theme-color;
+				width: 100px;
 				font-family: $OpenSans;
 				letter-spacing: 0.5px;
 				border-radius: 20px;
-				&:hover{
+				&:hover, &:focus {
 					background-color: $main-theme-darker2;
 				}
-				@include transition(all 0.5s ease-in-out);
+				//@include transition(all 0.5s ease-in-out);
 			}
 			.login_Form{
 				position: absolute;
