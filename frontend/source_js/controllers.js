@@ -83,6 +83,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   };
 
 
+
+
 }]);
 
 

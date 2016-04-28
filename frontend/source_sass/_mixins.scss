@@ -19,3 +19,34 @@
 	-moz-box-shadow: 0px 10px 49px -12px rgba(0,0,0,1);
 	box-shadow: 0px 10px 49px -12px rgba(0,0,0,1);
 }
+
+@mixin animation(){
+	-webkit-animation: pulsate 3s linear infinite;
+    -moz-animation: pulsate 3s linear infinite;
+    animation: pulsate 3s linear infinite;
+}
+
+@-webkit-keyframes pulsate {
+    0% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+        filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+    50% {-webkit-filter: drop-shadow( 0px 0px 8px #ffffcc );
+            		filter: drop-shadow( 0px 0px 8px #ffffcc );}
+    100% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+            		filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+}
+@-moz-keyframes pulsate {
+    0% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+            		filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+    50% {-webkit-filter: drop-shadow( 0px 0px 8px #ffffcc );
+            		filter: drop-shadow( 0px 0px 8px #ffffcc );}
+    100% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+            		filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+}
+@keyframes pulsate {
+    0% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+            		filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+    50% {-webkit-filter: drop-shadow( 0px 0px 8px #ffffcc );
+            		filter: drop-shadow( 0px 0px 8px #ffffcc );}
+    100% {-webkit-filter: drop-shadow( 0px 0px 8px $main-theme-color );
+            		filter: drop-shadow( 0px 0px 8px $main-theme-color );}
+}
