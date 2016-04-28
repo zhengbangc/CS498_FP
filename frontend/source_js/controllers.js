@@ -77,8 +77,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
   $scope.toggleCalendar = function(){
     console.log('gonna expand calendar now');
-    $('.calendar').toggleClass('large-8 large-12'); //change large-8 to large-12 or vice versa
-    //find calendar div
+    setTimeout(function(){
+    $('.calendar').removeClass('large-9'); //change large-8 to large-12 or vice versa
+    },500);//find calendar div
     //expand it to span all 12 columns
   };
 
