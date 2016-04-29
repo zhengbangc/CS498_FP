@@ -1,5 +1,60 @@
 var mp4Controllers = angular.module('mp4Controllers', []);
 
+mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Login', function($scope, $window, Users, Login) {
+    $scope.open_body = function(){
+      $('.body_container').addClass('open');
+      $('.home_container button').addClass('open');
+    }
+    $scope.open_loginForm = function(){
+       $('.login_Form').toggleClass('extended');
+    }
+    $scope.close_loginForm = function(){
+      $('.login_Form').toggleClass('extended');
+    }
+    $scope.open_signupForm = function(){
+      $('.signup_Form').toggleClass('extended');
+    }
+    $scope.close_signupForm = function(){
+      $('.signup_Form').toggleClass('extended'); 
+    }
+
+    $scope.signup = function(){
+       Users.post($scope.signup_name, $scope.signup_email, $scope.signup_password)
+            .then(function(response){
+                  // console.log(response);
+                  if(response.status == 500)
+                    $scope.signup_response = 'Email already exists in the data base';
+                  else
+                    $scope.signup_response = response.data.message;
+                  $scope.signup_name = "";
+                  $scope.signup_email = "";
+                  $scope.signup_password = "";
+                  $('#signup_response').addClass('responded');
+                  $('.signup_Form').toggleClass('extended');
+                  setTimeout(function(){
+                    $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
+                  },5000);
+            })
+    }
+    $scope.login = function(){
+      Login.post($scope.login_email, $scope.login_password)
+           .then(function(response){
+            console.log(response);
+                if(response.status == 401)
+                  $scope.signup_response = 'Incorrect email and password combination';
+                else 
+                  $scope.signup_response = 'Login successful!';
+                $('#signup_response').addClass('responded');
+                setTimeout(function(){
+                  $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
+                },5000);
+           })
+    }
+
+
+}]);
+
+
 
 mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
@@ -91,21 +146,3 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
 
 
-mp4Controllers.controller('HomeController', ['$scope' , '$window' , function($scope, $window) {
-    $scope.open_body = function(){
-      $('.body_container').addClass('open');
-      $('.home_container button').addClass('open');
-    }
-    $scope.open_loginForm = function(){
-       $('.login_Form').toggleClass('extended');
-    }
-    $scope.close_loginForm = function(){
-      $('.login_Form').toggleClass('extended');
-    }
-    $scope.open_signupForm = function(){
-      $('.signup_Form').toggleClass('extended');
-    }
-    $scope.close_signupForm = function(){
-      $('.signup_Form').toggleClass('extended'); 
-    }
-}]);
