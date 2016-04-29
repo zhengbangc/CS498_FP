@@ -10,6 +10,8 @@
 * Save / load schedules
 * Detail modal view for classes
 
+Backend Url: http://scheduler.intense.io/api/users
+
 ## Database Schema
 
 ### Class
