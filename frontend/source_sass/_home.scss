@@ -5,12 +5,18 @@
 	position: relative;
 	height: 100vh;
 	weight: 100vw;
+	overflow: hidden;
 	background: linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%);
 	.home_container{
 		&>button{
 			position: absolute;
 			display: block;
-			width: 25%;
+			@include breakpoint(small){
+				width: 40%;
+			}
+			@include breakpoint(medium){
+				width: 25%;
+			}
 			top: 50%;
 			@include translate_y(-50%);
 			left: 0;
@@ -29,16 +35,10 @@
 			}
 			&:not(.open){
 				img{
-					@include animation();
+					/*@include breakpoint(medium){*/
+						@include animation();	
+					/*}*/
 				}
-			}
-			img{
-/*				&:hover{
-					-webkit-filter: drop-shadow( 0px 5px 8px #000 ) !important;
-            		filter: drop-shadow( 0px 5px 8px #000 ) !important;
-            		@include transition(all 0.2s ease-in-out !important) ;
-            	}*/
-            	/*@include transition(all 0.2s ease-in-out);*/
 			}
 		}
 

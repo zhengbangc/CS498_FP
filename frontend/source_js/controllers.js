@@ -42,8 +42,10 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
             console.log(response);
                 if(response.status == 401)
                   $scope.signup_response = 'Incorrect email and password combination';
-                else 
+                else{
                   $scope.signup_response = 'Login successful!';
+                  $window.sessionStorage.accessToken = response.data.token;
+                }
                 $('#signup_response').addClass('responded');
                 setTimeout(function(){
                   $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
