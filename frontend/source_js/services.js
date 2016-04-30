@@ -52,11 +52,23 @@ mp4Services.factory('Users', function($http, $window) {
         isAuthed: function(){
             var token = $window.localStorage['jwtToken'];
             if(token){
-                console.log(token);
                 var params = parseJWT(token);
                 return Math.round(new Date().getTime() / 1000) <= params.exp;
             } else
                 return false;
+        },
+        updateUser: function(username, useremail, userpass){
+            var params = parseJWT($window.localStorage['jwtToken']);
+            var promise = $http({
+                method: 'PUT',
+                url: 'http://scheduler.intense.io/api/user' + params.id,
+                data: $.param({name: username, email: useremail, pass: userpass}),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function(response){
+                return response;
+            }, function(response){
+                return response;
+            });
         }
     }
 });

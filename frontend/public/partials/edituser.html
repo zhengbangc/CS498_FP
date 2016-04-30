@@ -4,13 +4,13 @@
 	<div class="row text-center">
 		<h1> Edit Your Account </h1>
 
-		<form data-abide ng-submit="editForm.$valid && login()" name="editUserForm">
+		<form data-abide ng-submit="editForm.$valid && updateUser()" name="editUserForm">
 			<input type="text" required ng-model="user_name" placeholder="Name">
 			<input type="text" required ng-model="user_email" placeholder="Email">
 			<input type="text" required ng-model="user_password" placeholder="Password">
 			<input type="text" required ng-model="user_password" placeholder="Confirm password">
 			<button class="button round" type="submit" id="submit" value="Submit"> Save Changes </button>
-			<button class="button round exit" type="reset" ng-click="close_editUserForm()"> Cancel </button>
+			<button class="button round exit" type="reset" ng-click="close()"> Cancel </button>
 		</form>
 	</div>
 
