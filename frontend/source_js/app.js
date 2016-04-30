@@ -29,7 +29,11 @@ app.config(['$routeProvider', function($routeProvider) {
   when('/autoschedule', {
     templateUrl: 'partials/autoschedule.html',
     controller: 'AutoScheduleController'
-  }).  
+  }).
+  when('/testcalendar', {
+    templateUrl: 'partials/TESTCALENDAR.html',
+    controller: 'EditScheduleController'
+  }).     
   otherwise({
     redirectTo: '/home'
   });
