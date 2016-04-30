@@ -149,8 +149,16 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   });
 */
   // Need to get all classes for the selected semester
-
-  $scope.class = '';
+  $scope.section = { 
+    'id': 1, 
+    'crn': 22222, 
+    'name':'Artificial Intelligence', 
+    'code':'CS440', 
+    'hours':3, 
+    'type':3, 
+    'times': [new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
+    'location':'123 Sesame St' 
+  };
   $scope.schedule = { 'name': 'My First Schedule' };
 
 
@@ -165,148 +173,163 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
   // ********** CALENDAR STUFF ***************
 
-$(document).ready(function () {
+    var appointments = new Array();
 
-            var classes = new Array();
+    var appointment1 = {
+        id: 1,
+        description: "George brings projector for presentations.",
+        location: "",
+        subject: "CS 241",
+        calendar: "Class 1",
+        start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
+        end: new Date(2016, 10, 23, 9, 50, 0),
+        resizable: false,
+        draggable: false
+    }
 
-            $scope.newClass = function(classID){
+    var appointment2 = {
+        id: 2,
+        description: "",
+        location: "",
+        subject: "CS 233",
+        calendar: "Class 2",
+        start: new Date(2016, 10, 24, 10, 0, 0),
+        end: new Date(2016, 10, 24, 10, 50, 0),
+        resizable: false,
+        draggable: false
+    }
 
+    var appointment3 = {
+        id: 3,
+        description: "",
+        location: "",
+        subject: "CS 357",
+        calendar: "Class 3",
+        start: new Date(2016, 10, 27, 11, 0, 0),
+        end: new Date(2016, 10, 27, 13, 0, 0),
+        resizable: false,
+        draggable: false
+    }
 
-            }
+    var appointment4 = {
+        id: 4,
+        description: "",
+        location: "",
+        subject: "CS 498RK1",
+        calendar: "Class 4",
+        start: new Date(2016, 10, 23, 16, 0, 0),
+        end: new Date(2016, 10, 23, 18, 0, 0),
+        resizable: false,
+        draggable: false
+    }
 
-            var appointment1 = {
-                id: "id1",
-                description: "George brings projector for presentations.",
-                location: "",
-                subject: "CS 241",
-                calendar: "Class 1",
-                start: new Date(2016, 10, 23, 9, 0, 0),
-                end: new Date(2016, 10, 23, 16, 0, 0),
-                resizable: false,
-                draggable: false
-            }
+    var appointment5 = {
+        id: 5,
+        description: "",
+        location: "",
+        subject: "Hort 100",
+        calendar: "Class 5",
+        start: new Date(2016, 10, 25, 15, 0, 0),
+        end: new Date(2016, 10, 25, 17, 0, 0),
+        resizable: false,
+        draggable: false
+    }
 
-            var appointment2 = {
-                id: "id2",
-                description: "",
-                location: "",
-                subject: "CS 233",
-                calendar: "Class 2",
-                start: new Date(2016, 10, 24, 10, 0, 0),
-                end: new Date(2016, 10, 24, 15, 0, 0),
-                resizable: false,
-                draggable: false
-            }
+    var appointment6 = {
+        id: 6,
+        description: "",
+        location: "",
+        subject: "Interview with Nancy",
+        calendar: "Class 6",
+        start: new Date(2016, 10, 26, 14, 0, 0),
+        end: new Date(2016, 10, 26, 16, 0, 0),
+        resizable: false,
+        draggable: false
+    }
+    appointments.push(appointment1);
+    appointments.push(appointment2);
+    appointments.push(appointment3);
+    appointments.push(appointment4);
+    appointments.push(appointment5);
+    appointments.push(appointment6);
 
-            var appointment3 = {
-                id: "id3",
-                description: "",
-                location: "",
-                subject: "CS 357",
-                calendar: "Class 3",
-                start: new Date(2016, 10, 27, 11, 0, 0),
-                end: new Date(2016, 10, 27, 13, 0, 0),
-                resizable: false,
-                draggable: false
-            }
-
-            var appointment4 = {
-                id: "id4",
-                description: "",
-                location: "",
-                subject: "CS 498RK1",
-                calendar: "Class 4",
-                start: new Date(2016, 10, 23, 16, 0, 0),
-                end: new Date(2016, 10, 23, 18, 0, 0),
-                resizable: false,
-                draggable: false
-            }
-
-            var appointment5 = {
-                id: "id5",
-                description: "",
-                location: "",
-                subject: "Hort 100",
-                calendar: "Class 5",
-                start: new Date(2016, 10, 25, 15, 0, 0),
-                end: new Date(2016, 10, 25, 17, 0, 0),
-                resizable: false,
-                draggable: false
-            }
-
-            var appointment6 = {
-                id: "id6",
-                description: "",
-                location: "",
-                subject: "Interview with Nancy",
-                calendar: "Class 6",
-                start: new Date(2016, 10, 26, 14, 0, 0),
-                end: new Date(2016, 10, 26, 16, 0, 0),
-                resizable: false,
-                draggable: false
-            }
-            classes.push(appointment1);
-            classes.push(appointment2);
-            classes.push(appointment3);
-            classes.push(appointment4);
-            classes.push(appointment5);
-            classes.push(appointment6);
-
-            // prepare the data -- change this to fit our data!!!!!!!!!!!!!
-            var source =
-            {
-                dataType: "array",
-                dataFields: [
-                    { name: 'id', type: 'string' },
-                    { name: 'description', type: 'string' },
-                    { name: 'location', type: 'string' },
-                    { name: 'subject', type: 'string' },
-                    { name: 'calendar', type: 'string' },
-                    { name: 'start', type: 'date' },
-                    { name: 'end', type: 'date' }
-                ],
-                id: 'id',
-                localData: classes
-                //url: '../sampledata/appointments.txt' //use this to get data from a file! (e.g. a .json file)
-            };
-            var adapter = new $.jqx.dataAdapter(source);
-            $("#scheduler").jqxScheduler({
-                date: new $.jqx.date(2016, 11, 23),
-                width: '100vw',
-                height: '100vh',
-                source: adapter,
-                view: 'weekView',
-                showLegend: true,
-                contextMenu: false,
-                ready: function () {
-                    $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
-                },
-                resources:
-                {
-                    colorScheme: "scheme05",
-                    dataField: "calendar",
-                    source:  new $.jqx.dataAdapter(source)
-                },
-                appointmentDataFields:
-                {
-                    from: "start",
-                    to: "end",
-                    id: "id",
-                    description: "description",
-                    location: "location",
-                    subject: "subject",
-                    resourceId: "calendar"
-                },
-                views:
-                [
-                  { type: "weekView", showWeekends: false, timeRuler: { scaleStartHour: 8, scaleEndHour: 21 } }
-                ]
-            });
-        });
+    // prepare the data -- change this to fit our data!!!!!!!!!!!!!
+    var source =
+    {
+        dataType: "array",
+        dataFields: [
+            { name: 'id', type: 'int' },
+            { name: 'description', type: 'string' },
+            { name: 'location', type: 'string' },
+            { name: 'subject', type: 'string' },
+            { name: 'calendar', type: 'string' },
+            { name: 'start', type: 'date' },
+            { name: 'end', type: 'date' }
+        ],
+        id: 'id',
+        localData: appointments
+        //url: '../sampledata/appointments.txt' //use this to get data from a file! (e.g. a .json file)
+    };
+    var adapter = new $.jqx.dataAdapter(source);
+    $("#scheduler").jqxScheduler({
+        date: new $.jqx.date(2016, 11, 23),
+        width: '100vw',
+        height: '100vh',
+        source: adapter,
+        view: 'weekView',
+        showLegend: false,  //bottom with colored squares
+        toolbarHeight: 0,
+        enableHover: true,
+        timeZone: 'Central Standard Time',
+        ready: function () {
+            $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+        },
+        resources:
+        {
+            colorScheme: "scheme05",
+            dataField: "calendar",
+            source:  new $.jqx.dataAdapter(source)
+        },
+        appointmentDataFields:
+        {
+            from: "start",
+            to: "end",
+            id: "id",
+            description: "description",
+            location: "location",
+            subject: "subject",
+            resourceId: "calendar"
+        },
+        views:
+        [
+          { type: "weekView", showWeekends: false, timeRuler: { scaleStartHour: 8, scaleEndHour: 21 } }
+        ]
+    });
 
 
-  // ******************************
+      //add section to calendar
+    $scope.addSection = function(){
+        var sec = $scope.section;
+        console.log('section = ' + sec + Object.keys(sec));
+        var newappointment = {
+          id: sec.id,
+          description: sec.name,  // name of the class ("Artificial Intelligence")
+          location: sec.location,
+          subject: sec.code,  // e.g. "CS440"
+          calendar: sec.code,
+          start: sec.times[0], //(year, month, day, hour, minute, second)
+          end: sec.times[1],
+          resizable: false,
+          draggable: false
+        }
+        appointments.push(newappointment);
+        $('#jqxScheduler').jqxScheduler('addAppointment', newappointment);
+        console.log('Attempted to add section to calendar');
+    }
 
+    $scope.addSection();
+
+    // **** end calendar view
 
 }]);
 
