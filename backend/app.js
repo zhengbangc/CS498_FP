@@ -113,7 +113,7 @@ classesRoute.get(function(req, res) {
       name: req.query.name
     },
     include: [{
-	    model: Section
+	    model: Section, as: 'Sections'
     }]
   }).then(function(classes) {
     res.json({message: 'OK', data: classes});
@@ -129,7 +129,7 @@ classesRoute.post(function(req, res) {
 		required: '',
 		term: 'fa16',
 		description: req.body.description
-	},{ include: [ Section ]})
+	},{ include: [{ model: Section, as: 'Sections' }]})
 	.then(function(obj) {
 		res.statusCode = 201;
 		return res.json({message: 'created', data: [obj]});
@@ -140,7 +140,7 @@ classesRoute.post(function(req, res) {
 var classRoute = router.route('/class/:id');
 
 classRoute.get(function(req, res) {
-  Class.findById(req.params.id).then(function(aClass) {
+  Class.findById(req.params.id, {include: [{ model: Section, as: 'Sections'}]}).then(function(aClass) {
     if(!aClass) {
       res.status(404);
       res.json({message: 'Class not found', data: [{id: req.params.id}]});
@@ -153,6 +153,37 @@ classRoute.get(function(req, res) {
   });
 });
 
+//Section route
+var sectionRoute = router.route('/sections');
+
+sectionRoute.get(function(req, res) {
+	Section.findAll({
+		where: {
+			name: req.query.name
+		}
+	}).then(function(sections) {
+		res.json({message: 'OK', data: sections});
+	}).catch(function(err) {
+		res.status(500);
+		res.json({message: getError(err), data: []});
+	});
+});
+
+sectionRoute.post(function(req, res) {
+	Section.create({
+			crn: req.body.crn,
+			name: req.body.name,
+			code: req.body.code,
+			hours: req.body.hours,
+		  type: req.body.type,
+		  time: req.body.time
+		})
+		.then(function(obj) {
+			class.addSection(obj);
+			res.statusCode = 201;
+			return res.json({message: 'created', data: [obj]});
+		});
+});
 
 //Section:id route
 var sectionRoute = router.route('/sections/:id');
