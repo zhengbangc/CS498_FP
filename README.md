@@ -27,7 +27,7 @@ Backend Url: http://scheduler.intense.io/api/users
 |id|int|
 |crn|int|
 |name|string|
-|code|string|
+|course_number|string|
 |hours|int|
 |type|int|
 |time|object|
@@ -45,7 +45,7 @@ Backend Url: http://scheduler.intense.io/api/users
 |---|---|
 |id|int|
 |name|string|
-|user|User|
+|user|int|
 |classes|array of Class|
 |sections|array of Section|
 
