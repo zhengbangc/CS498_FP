@@ -103,7 +103,7 @@ classesRoute.get(function(req, res) {
       name: req.query.name
     },
     include: [{
-      model: Section
+	    model: Section
     }]
   }).then(function(classes) {
     res.json({message: 'OK', data: classes});
@@ -119,7 +119,8 @@ classesRoute.post(function(req, res) {
 		required: '',
 		term: 'fa16',
 		description: req.body.description
-	}).then(function(obj) {
+	},{ include: [ Section ]})
+	.then(function(obj) {
 		res.statusCode = 201;
 		return res.json({message: 'created', data: [obj]});
 	});
@@ -173,7 +174,7 @@ usersRoute.post(function(req, res) {
 				name: req.body.name,
 				email: req.body.email,
 				hash: hash
-			}).then(function() {
+			},{include: [models.Schedule]}).then(function() {
 				res.statusCode = 201;
 				return res.json({message: 'User created', data: []});
 			}).catch(function(err) {
@@ -216,11 +217,7 @@ schedulesRoute.get(function(req, res) {
     where: {
       name: req.query.name,
       user: req.query.user
-    },
-    include: [
-      { model: Class },
-      { model: Section }
-    ]
+    }
   }).then(function(schedules) {
     res.json({message: 'OK', data: schedules});
   }).catch(function(err) {
@@ -278,7 +275,6 @@ scheduleRoute.put(function(req, res) {
   });
 });
 
-//TODO: Finish delete
 scheduleRoute.delete(function(req, res) {
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
@@ -286,7 +282,10 @@ scheduleRoute.delete(function(req, res) {
       res.json({message: 'Schedule not found', data: []});
     }
     schedule.destroy().then(function() {
-	//TODO: stuff
+			res.json({message: 'Schedule deleted', data: []});
+    }).catch(function(err) {
+	    res.status(500);
+	    res.json({message: getError(err), data: []});
     });
   });
 });
@@ -294,4 +293,3 @@ scheduleRoute.delete(function(req, res) {
 // Start the server
 app.listen(port);
 console.log('Server running on port ' + port);
-
