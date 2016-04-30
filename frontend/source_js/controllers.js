@@ -36,6 +36,7 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                   },5000);
             })
     }
+
     $scope.login = function(){
       Login.post($scope.login_email, $scope.login_password)
            .then(function(response){
@@ -44,7 +45,8 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                   $scope.signup_response = 'Incorrect email and password combination';
                 else{
                   $scope.signup_response = 'Login successful!';
-                  $window.sessionStorage.accessToken = response.data.token;
+                  $window.localStorage['jwtToken'] = response.data.token;
+                  console.log(Users.get());
                 }
                 $('#signup_response').addClass('responded');
                 setTimeout(function(){
