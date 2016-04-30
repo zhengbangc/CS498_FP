@@ -1,209 +1,105 @@
-<div class="editSchedule" ng-controller='EditScheduleController'>
-	<div class="body_Container">
-		<div class="header text-center">
-			<h1>{{ schedule.name }}</h1>
-		</div>
-		<div class="row expanded text-center">
-			<div class="callout addclass columns small-12 large-3" data-closable>
-				<h3>Add a Class</h3>
-				This bar pops up when a user chooses to manually edit a schedule.<br><br>
-				<input ng-model="class.name" type="text" placeholder="Search for a class"><br><br>
-				A list of sections for the class will show up here.<br>
-				Should this side bar be inside a (movable?) modal window instead? <br><br>
-				<button class="button round" ng-click="addClass()">Add Class</button>
-				<div class="close-menu">
-					<button ng-click="toggleCalendar()" class="close-button" aria-label="Close modal" type="button" data-close><span aria-hidden="true">&times;</span></button>
-				</div>
-			</div>
-			<div class="calendar columns small-12 large-9">
-				<!-- Calendar display will be here. In the meantime, enjoy this sample data. <br> -->
-				<div class="row">
-					<div class="columns small-2">
-						<ul>
-							<h5>time</h5>
-							<li>8:00 am</li>
-							<li>9:00 am</li>
-							<li>10:00 am</li>
-							<li>11:00 am</li>
-							<li>12:00 am</li>
-							<li>13:00 am</li>
-							<li>14:00 am</li>
-							<li>15:00 am</li>
-							<li>16:00 am</li>
-							<li>17:00 am</li>
-							<li>18:00 am</li>
-							<li>19:00 am</li>
-							<li>20:00 am</li>
-							<li>21:00 am</li>
-						</ul>
-					</div>
-					<div class="columns small-2">
-						<ul>
-							<h5>Monday</h5>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
-					</div>
-					<div class="columns small-2">
-						<ul>
-							<h5>Tuesday</h5>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
-					</div><div class="columns small-2">
-						<ul>
-							<h5>Wednesday</h5>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
-					</div><div class="columns small-2">
-						<ul>
-							<h5>Thursday</h5>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
-					</div><div class="columns small-2">
-						<ul>
-							<h5>Friday</h5>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-							<li></li>
-						</ul>
-				</div>
-				<!-- <table>
-					<tr>
-						<td></td>
-						<td>Mon</td>
-						<td>Tue</td>
-						<td>Wed</td>
-						<td>Thu</td>
-						<td>Fri</td>
-					</tr>
-					<tr>
-						<td>8:00-8:50 am</td>
-						<td>HTML tables 101</td>
-						<td> </td>
-						<td>HTML tables 101</td>
-						<td> </td>
-						<td>HTML tables 101</td>
-					</tr>
-					<tr>
-						<td>9:00-9:50 am</td>
-						<td> </td>
-						<td>Trolling 519</td>
-						<td> </td>
-						<td>Trolling 519</td>
-						<td> </td>
-					</tr>
-					<tr>
-						<td>10:00-10:50 am</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-					</tr>
-					<tr>
-						<td>11:00-11:50 am</td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
-					</tr>
-					<tr>
-						<td>12:00-12:50 pm</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-					</tr>
-					<tr>
-						<td>1:00-1:50 pm</td>
-						<td>ICE 100: Intro to ice skating</td>
-						<td>Math 001: Fun with numbers</td>
-						<td>ICE 100: Intro to ice skating</td>
-						<td>Math 001: Fun with numbers</td>
-						<td>ICE 100: Intro to ice skating</td>
-					</tr>
-					<tr>
-						<td>2:00-2:50 pm</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-						<td>Math 001: Fun with numbers</td>
-						<td> </td>
-					</tr>																	
-				</table> -->
-			</div>
-			
-		</div>
+<div class="main" ng-controller='EditScheduleController'>
+
+	<div class="row text-center">
+		<h1>{{ schedule.name }}</h1>
 	</div>
 
-</div>
+	<div class="row expanded text-center">
+
+		<div class="callout addclass columns small-12 large-3" data-closable>
+			<h3>Add a Class</h3>
+
+			This bar pops up when a user chooses to manually edit a schedule.<br><br>
+
+			<input ng-model="class.name" type="text" placeholder="Search for a class"><br><br>
+
+			A list of sections for the class will show up here.<br>
+			Should this side bar be inside a (movable?) modal window instead? <br><br>
+
+			<button class="button round" ng-click="addClass()">Add Class</button>
+
+			<div class="close-menu">
+				<button ng-click="toggleCalendar()" class="close-button" aria-label="Close modal" type="button" data-close><span aria-hidden="true">&times;</span></button>
+			</div>
+		</div>
+
+		<div class="calendar columns small-12 large-9">
+			Calendar display will be here. In the meantime, enjoy this sample data. <br>
+
+			<table>
+				<tr>
+					<td></td>
+					<td>Mon</td>
+					<td>Tue</td>
+					<td>Wed</td>
+					<td>Thu</td>
+					<td>Fri</td>
+				</tr>
+				<tr>
+					<td>8:00-8:50 am</td>
+					<td>HTML tables 101</td>
+					<td> </td>
+					<td>HTML tables 101</td>
+					<td> </td>
+					<td>HTML tables 101</td>
+				</tr>
+				<tr>
+					<td>9:00-9:50 am</td>
+					<td> </td>
+					<td>Trolling 519</td>
+					<td> </td>
+					<td>Trolling 519</td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td>10:00-10:50 am</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td>11:00-11:50 am</td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td>12:00-12:50 pm</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+				</tr>
+				<tr>
+					<td>1:00-1:50 pm</td>
+					<td>ICE 100: Intro to ice skating</td>
+					<td>Math 001: Fun with numbers</td>
+					<td>ICE 100: Intro to ice skating</td>
+					<td>Math 001: Fun with numbers</td>
+					<td>ICE 100: Intro to ice skating</td>
+				</tr>
+				<tr>
+					<td>2:00-2:50 pm</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+					<td>Math 001: Fun with numbers</td>
+					<td> </td>
+				</tr>																	
+			</table>
+		</div>
+		
+	</div>
+
+
 
 <!---- Navigation Bar ---->
-    <nav class="text-left">
+    <nav>
         <a class="button" href="#/home">SCHEDULER</a>
         <a class="button" href="#/createschedule">
             <i class="fa fa-plus" aria-hidden="true"></i>
