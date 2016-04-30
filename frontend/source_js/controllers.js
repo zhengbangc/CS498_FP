@@ -1,6 +1,9 @@
 var mp4Controllers = angular.module('mp4Controllers', []);
 
 mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Login', function($scope, $window, Users, Login) {
+    if(Users.isAuthed() == true)
+        $window.location.href = '#/myschedules';
+
     $scope.open_body = function(){
       $('.body_container').addClass('open');
       $('.home_container button').addClass('open');
@@ -41,17 +44,25 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
       Login.post($scope.login_email, $scope.login_password)
            .then(function(response){
             console.log(response);
-                if(response.status == 401)
+                if(response.status == 401){
                   $scope.signup_response = 'Incorrect email and password combination';
+                  $('#signup_response').addClass('responded');
+                  setTimeout(function(){
+                    $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
+                  },5000);
+                }
                 else{
                   $scope.signup_response = 'Login successful!';
+                  $('#signup_response').addClass('responded');
                   $window.localStorage['jwtToken'] = response.data.token;
-                  console.log(Users.get());
+                  Users.get().then(function(response){
+                    console.log(response.data);
+                  });
+                  setTimeout(function(){
+                    $window.location.href = '#/myschedules';
+                  },1000);
                 }
-                $('#signup_response').addClass('responded');
-                setTimeout(function(){
-                  $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
-                },5000);
+                
            })
     }
 
@@ -60,12 +71,17 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
 
 
 
-mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
 
-/*  Schedules.getByUser(user.id).success(function(data){
-    $scope.schedules = data.data;
+  if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+  Users.get().then(function(response){
+    if(response.status == 200)
+      $scope.user = response.data;
+    else
+      $window.location.href = '#/home';
   });
-*/
+
   // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
 
   $scope.schedules = [ 
@@ -78,8 +94,12 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
     { 'id': 1006, name: 'My schedule 7', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2016' }  
     ];
   $scope.semesters = [ 'Fall 2016', 'Spring 2016', 'Fall 2015', 'Spring 2015']; 
-  $scope.user = { 'id': 1, 'name': 'Maggie Smith' };
+  // $scope.user = { 'id': 1, 'name': 'Maggie Smith' };
 
+  $scope.logout = function(){
+    $window.localStorage.removeItem('jwtToken');
+    $window.location.href = '#/home';
+  }
 }]);
 
 
