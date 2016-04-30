@@ -146,56 +146,72 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   // ********** CALENDAR STUFF ***************
 
 $(document).ready(function () {
-            var appointments = new Array();
+
+            var classes = new Array();
+
+            $scope.newClass = function(classID){
+
+
+            }
 
             var appointment1 = {
                 id: "id1",
                 description: "George brings projector for presentations.",
                 location: "",
-                subject: "Quarterly Project Review Meeting",
-                calendar: "Room 1",
+                subject: "CS 241",
+                calendar: "Class 1",
                 start: new Date(2016, 10, 23, 9, 0, 0),
-                end: new Date(2016, 10, 23, 16, 0, 0)
+                end: new Date(2016, 10, 23, 16, 0, 0),
+                resizable: false,
+                draggable: false
             }
 
             var appointment2 = {
                 id: "id2",
                 description: "",
                 location: "",
-                subject: "IT Group Mtg.",
-                calendar: "Room 2",
+                subject: "CS 233",
+                calendar: "Class 2",
                 start: new Date(2016, 10, 24, 10, 0, 0),
-                end: new Date(2016, 10, 24, 15, 0, 0)
+                end: new Date(2016, 10, 24, 15, 0, 0),
+                resizable: false,
+                draggable: false
             }
 
             var appointment3 = {
                 id: "id3",
                 description: "",
                 location: "",
-                subject: "Course Social Media",
-                calendar: "Room 3",
+                subject: "CS 357",
+                calendar: "Class 3",
                 start: new Date(2016, 10, 27, 11, 0, 0),
-                end: new Date(2016, 10, 27, 13, 0, 0)
+                end: new Date(2016, 10, 27, 13, 0, 0),
+                resizable: false,
+                draggable: false
             }
 
             var appointment4 = {
                 id: "id4",
                 description: "",
                 location: "",
-                subject: "New Projects Planning",
-                calendar: "Room 2",
+                subject: "CS 498RK1",
+                calendar: "Class 4",
                 start: new Date(2016, 10, 23, 16, 0, 0),
-                end: new Date(2016, 10, 23, 18, 0, 0)
+                end: new Date(2016, 10, 23, 18, 0, 0),
+                resizable: false,
+                draggable: false
             }
 
             var appointment5 = {
                 id: "id5",
                 description: "",
                 location: "",
-                subject: "Interview with James",
-                calendar: "Room 1",
+                subject: "Hort 100",
+                calendar: "Class 5",
                 start: new Date(2016, 10, 25, 15, 0, 0),
-                end: new Date(2016, 10, 25, 17, 0, 0)
+                end: new Date(2016, 10, 25, 17, 0, 0),
+                resizable: false,
+                draggable: false
             }
 
             var appointment6 = {
@@ -203,18 +219,20 @@ $(document).ready(function () {
                 description: "",
                 location: "",
                 subject: "Interview with Nancy",
-                calendar: "Room 4",
+                calendar: "Class 6",
                 start: new Date(2016, 10, 26, 14, 0, 0),
-                end: new Date(2016, 10, 26, 16, 0, 0)
+                end: new Date(2016, 10, 26, 16, 0, 0),
+                resizable: false,
+                draggable: false
             }
-            appointments.push(appointment1);
-            appointments.push(appointment2);
-            appointments.push(appointment3);
-            appointments.push(appointment4);
-            appointments.push(appointment5);
-            appointments.push(appointment6);
+            classes.push(appointment1);
+            classes.push(appointment2);
+            classes.push(appointment3);
+            classes.push(appointment4);
+            classes.push(appointment5);
+            classes.push(appointment6);
 
-            // prepare the data
+            // prepare the data -- change this to fit our data!!!!!!!!!!!!!
             var source =
             {
                 dataType: "array",
@@ -228,16 +246,18 @@ $(document).ready(function () {
                     { name: 'end', type: 'date' }
                 ],
                 id: 'id',
-                localData: appointments
+                localData: classes
+                //url: '../sampledata/appointments.txt' //use this to get data from a file! (e.g. a .json file)
             };
             var adapter = new $.jqx.dataAdapter(source);
             $("#scheduler").jqxScheduler({
                 date: new $.jqx.date(2016, 11, 23),
-                width: 850,
-                height: 600,
+                width: '100vw',
+                height: '100vh',
                 source: adapter,
                 view: 'weekView',
                 showLegend: true,
+                contextMenu: false,
                 ready: function () {
                     $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
                 },
@@ -259,9 +279,7 @@ $(document).ready(function () {
                 },
                 views:
                 [
-                    'dayView',
-                    'weekView',
-                    'monthView'
+                  { type: "weekView", showWeekends: false, timeRuler: { scaleStartHour: 8, scaleEndHour: 21 } }
                 ]
             });
         });
