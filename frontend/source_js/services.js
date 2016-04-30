@@ -48,6 +48,15 @@ mp4Services.factory('Users', function($http, $window) {
             });
 
             return promise;
+        },
+        isAuthed: function(){
+            var token = $window.localStorage['jwtToken'];
+            if(token){
+                console.log(token);
+                var params = parseJWT(token);
+                return Math.round(new Date().getTime() / 1000) <= params.exp;
+            } else
+                return false;
         }
     }
 });
