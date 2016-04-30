@@ -27,10 +27,13 @@ Backend Url: http://scheduler.intense.io/api/users
 |id|int|
 |crn|int|
 |name|string|
-|course_number|string|
-|hours|int|
-|type|int|
-|time|object|
+|section_code|string|
+|class_location|string|
+|instructor|string|
+|credit_hours|int|
+|section_type|int|
+|class_times|array of array of int|
+|restrictions|string|
 
 ### User
 |Name|Type|
