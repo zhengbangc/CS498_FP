@@ -27,13 +27,18 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                   // console.log(response);
                   if(response.status == 500)
                     $scope.signup_response = 'Email already exists in the data base';
-                  else
+                  else{
                     $scope.signup_response = response.data.message;
+                    $window.localStorage['jwtToken'] = response.data.data.token;
+                    setTimeout(function(){
+                      $window.location.href = '#/myschedules';
+                    },1000);
+                  }
                   $scope.signup_name = "";
                   $scope.signup_email = "";
                   $scope.signup_password = "";
                   $('#signup_response').addClass('responded');
-                  $('.signup_Form').toggleClass('extended');
+                  $('.signup_Form').toggleClass('extended')
                   setTimeout(function(){
                     $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
                   },5000);
@@ -75,12 +80,15 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
 
   if(Users.isAuthed() == false)
         $window.location.href = '#/home';
-  Users.get().then(function(response){
-    if(response.status == 200)
-      $scope.user = response.data;
-    else
-      $window.location.href = '#/home';
-  });
+  else {
+    Users.get().then(function(response){
+      if(response.status == 200){
+        $scope.user = response.data.data;
+      }
+      else
+        $window.location.href = '#/home';
+    });
+  }
 
   // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
 
@@ -100,6 +108,32 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
     $window.localStorage.removeItem('jwtToken');
     $window.location.href = '#/home';
   }
+}]);
+
+mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Users', function($scope, $http, $window,Users){
+    if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+    else {
+      Users.get().then(function(response){
+        if(response.status == 200)
+          $scope.user = response.data.data;
+        else
+          $window.location.href = '#/home';
+      });
+    }
+
+    $scope.updateUser = function (){
+        Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password);
+    }
+    $scope.close = function(){
+      $window.location.href = '#/myschedules';
+    }
+
+
+    $scope.logout = function(){
+      $window.localStorage.removeItem('jwtToken');
+      $window.location.href = '#/home';
+    }
 }]);
 
 
