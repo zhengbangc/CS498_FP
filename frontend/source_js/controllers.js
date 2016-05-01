@@ -341,10 +341,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     });
 
 
-      //add section to calendar
+    //add section to calendar
     $scope.addSection = function(){
         var sec = $scope.section;
-        console.log('section = ' + sec + Object.keys(sec));
         var newappointment = {
           id: sec.id,
           description: sec.name,  // name of the class ("Artificial Intelligence")
@@ -356,9 +355,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
           resizable: false,
           draggable: false
         }
-        appointments.push(newappointment);
+        //appointments.push(newappointment);
         $('#scheduler').jqxScheduler('addAppointment', newappointment);
-        console.log('Attempted to add section to calendar');
+        console.log('Added section to calendar');
     }
 
     $scope.addSection();
