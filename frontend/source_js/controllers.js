@@ -357,7 +357,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
           draggable: false
         }
         appointments.push(newappointment);
-        $('#jqxScheduler').jqxScheduler('addAppointment', newappointment);
+        $('#scheduler').jqxScheduler('addAppointment', newappointment);
         console.log('Attempted to add section to calendar');
     }
 
