@@ -1,4 +1,4 @@
-# CS498_FP
+# CS498_FP Scheduler for UIUC Classes
 
 ## Functionality
 * Use Course Explorer API / scrape
