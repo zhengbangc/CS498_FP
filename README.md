@@ -10,7 +10,10 @@
 * Save / load schedules
 * Detail modal view for classes
 
-Backend Url: http://scheduler.intense.io/api/users
+Backend Url: 
+User Endpoint: http://scheduler.intense.io/api/user/:userid
+Schedule Endpoint: http://scheduler.intense.io/api/schedules/:scheduleid
+
 
 ## Database Schema
 
@@ -42,6 +45,7 @@ Backend Url: http://scheduler.intense.io/api/users
 |name|string|
 |email|string|
 |hash|string|
+|schedules|[]|
 
 ### Schedule
 |Name|Type|
