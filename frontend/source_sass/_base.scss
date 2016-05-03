@@ -31,6 +31,9 @@ p{
 	&.round{
 		border-radius: 20px;
 	}
+	&.disabled {
+		pointer-events: none;
+	}
 }
 .round-button{ border-radius: 20px; }
 

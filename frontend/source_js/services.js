@@ -57,18 +57,19 @@ mp4Services.factory('Users', function($http, $window) {
             } else
                 return false;
         },
-        updateUser: function(username, useremail, userpass){
+        updateUser: function(username, useremail, userpass, usertoken){
             var params = parseJWT($window.localStorage['jwtToken']);
             var promise = $http({
                 method: 'PUT',
-                url: 'http://scheduler.intense.io/api/user' + params.id,
-                data: $.param({name: username, email: useremail, pass: userpass}),
+                url: 'http://scheduler.intense.io/api/user/' + params.id,
+                data: $.param({name: username, email: useremail, pass: userpass, token: usertoken}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 return response;
             }, function(response){
                 return response;
             });
+            return promise;
         }
     }
 });

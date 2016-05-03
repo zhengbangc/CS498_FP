@@ -123,7 +123,25 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
     }
 
     $scope.updateUser = function (){
-        Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password);
+        Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password, $window.localStorage['jwtToken'])
+             .then(function(){
+                Users.get().then(function(response){
+                if(response.status == 200){
+                  $scope.user = response.data.data;
+                }
+                else
+                  $window.location.href = '#/home';
+
+                $scope.edit_response = "Edit user successful";
+                $('#edituser_response').toggleClass('responded');
+                setTimeout(function(){
+                  $('#edituser_response').toggleClass('responded');
+                  $window.location.href = '#/home';
+                }, 3000);
+
+
+              });
+             })
     }
     $scope.close = function(){
       $window.location.href = '#/myschedules';
