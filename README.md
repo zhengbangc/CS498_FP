@@ -11,8 +11,8 @@
 * Detail modal view for classes
 
 #Backend Url: 
-#User Endpoint: http://scheduler.intense.io/api/user/:userid
-#Schedule Endpoint: http://scheduler.intense.io/api/schedules/:scheduleid
+*User Endpoint: http://scheduler.intense.io/api/user/:userid
+*Schedule Endpoint: http://scheduler.intense.io/api/schedules/:scheduleid
 
 
 ## Database Schema
