@@ -8,7 +8,7 @@ app.config(['$routeProvider', function($routeProvider) {
   }).
   when('/createschedule', {
     templateUrl: 'partials/createschedule.html',
-    controller: 'CreateController'
+    controller: 'CreateScheduleController'
   }).
   when('/myschedules', {
     templateUrl: 'partials/myschedules.html',
