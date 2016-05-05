@@ -255,6 +255,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   });
 */
   // Need to get all classes for the selected semester
+
+  $(document).foundation();
+
   $scope.section = { 
     'id': 8, 
     'crn': 22222,
