@@ -14,7 +14,17 @@ var Strategy = require('passport-local');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var jwt_secret = 'lol cs498';
-var authenticate = expressJwt({secret: jwt_secret});
+var authenticate = expressJwt({
+	secret: jwt_secret,
+	getToken: function(req) {
+		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+			return req.headers.authorization.split(' ')[1];
+		} else if (req.body && req.body.token) {
+			return req.body.token;
+		}
+		return null;
+	}
+});
 
 var router = express.Router();
 
@@ -103,7 +113,7 @@ classesRoute.get(function(req, res) {
       name: req.query.name
     },
     include: [{
-      model: Section
+	    model: Section, as: 'Sections'
     }]
   }).then(function(classes) {
     res.json({message: 'OK', data: classes});
@@ -119,7 +129,8 @@ classesRoute.post(function(req, res) {
 		required: '',
 		term: 'fa16',
 		description: req.body.description
-	}).then(function(obj) {
+	},{ include: [{ model: Section, as: 'Sections' }]})
+	.then(function(obj) {
 		res.statusCode = 201;
 		return res.json({message: 'created', data: [obj]});
 	});
@@ -129,7 +140,7 @@ classesRoute.post(function(req, res) {
 var classRoute = router.route('/class/:id');
 
 classRoute.get(function(req, res) {
-  Class.findById(req.params.id).then(function(aClass) {
+  Class.findById(req.params.id, {include: [{ model: Section, as: 'Sections'}]}).then(function(aClass) {
     if(!aClass) {
       res.status(404);
       res.json({message: 'Class not found', data: [{id: req.params.id}]});
@@ -142,6 +153,37 @@ classRoute.get(function(req, res) {
   });
 });
 
+//Section route
+var sectionRoute = router.route('/sections');
+
+sectionRoute.get(function(req, res) {
+	Section.findAll({
+		where: {
+			name: req.query.name
+		}
+	}).then(function(sections) {
+		res.json({message: 'OK', data: sections});
+	}).catch(function(err) {
+		res.status(500);
+		res.json({message: getError(err), data: []});
+	});
+});
+
+sectionRoute.post(function(req, res) {
+	Section.create({
+			crn: req.body.crn,
+			name: req.body.name,
+			code: req.body.code,
+			hours: req.body.hours,
+		  type: req.body.type,
+		  time: req.body.time
+		})
+		.then(function(obj) {
+			class.addSection(obj);
+			res.statusCode = 201;
+			return res.json({message: 'created', data: [obj]});
+		});
+});
 
 //Section:id route
 var sectionRoute = router.route('/sections/:id');
@@ -161,6 +203,55 @@ sectionRoute.get(function(req, res) {
 });
 
 //User route
+var userRoute = router.route('/user/:id');
+userRoute.get(function(req, res) {
+	User.findOne({where: {id: req.params.id}, include: [{model: Schedule, as: 'Schedules'}]}).then(function(user) {
+		if(!user) {
+			res.status(404);
+			res.json({message: 'User not found', data: [{id: req.params.id}]});
+		} else {
+			var ret = {id: user.id, name: user.name, email: user.email, schedules: user.Schedules};
+			res.json({message: 'OK', data: ret});
+		}
+	}).catch(function(err) {
+		res.status(500);
+		res.json({message: getError(err), data: []});
+	});
+});
+
+userRoute.put(authenticate, function(req, res) {
+	if(req.user.id != req.params.id) {
+		res.status(403);
+		res.json({message: 'Unauthorized', data: []});
+	}
+	User.findById(req.params.id).then(function(user) {
+		if(!user) {
+			res.status(404);
+			res.json({message: 'User not found', data: [{id: req.params.id}]});
+		} else {
+			user.name = req.body.name || user.name;
+			user.email = req.body.email || user.email;
+			if(req.body.pass) {
+				bcrypt.genSalt(10, function(err, salt) {
+					bcrypt.hash(req.body.pass, salt, function(err, hash) {
+						user.hash = hash;
+						user.save().then(function() {
+							res.json({message: 'User updated', data: [{id: req.params.id}]});
+						});
+					});
+				});
+			} else {
+				user.save().then(function() {
+					res.json({message: 'User updated', data: [{id: req.params.id}]});
+				});
+			}
+		}
+	}).catch(function(err) {
+		res.status(500);
+		res.json({message: getError(err), data: []});
+	});
+});
+
 var usersRoute = router.route('/user');
 usersRoute.post(function(req, res) {
 	if(!req.body.name || !req.body.email || !req.body.pass) {
@@ -173,9 +264,14 @@ usersRoute.post(function(req, res) {
 				name: req.body.name,
 				email: req.body.email,
 				hash: hash
-			}).then(function() {
+			}).then(function(user) {
 				res.statusCode = 201;
-				return res.json({message: 'User created', data: []});
+				var token = jwt.sign({
+					id: user.id,
+				}, jwt_secret, {
+					expiresIn: 86400
+				});
+				return res.json({message: 'User created', data: {id: user.id, name: user.name, email: user.email, schedules: [], token: token}});
 			}).catch(function(err) {
 				res.statusCode = 500;
 				return res.json({message: 'Error creating user: ' + err, data: []});
@@ -216,11 +312,7 @@ schedulesRoute.get(function(req, res) {
     where: {
       name: req.query.name,
       user: req.query.user
-    },
-    include: [
-      { model: Class },
-      { model: Section }
-    ]
+    }
   }).then(function(schedules) {
     res.json({message: 'OK', data: schedules});
   }).catch(function(err) {
@@ -278,7 +370,6 @@ scheduleRoute.put(function(req, res) {
   });
 });
 
-//TODO: Finish delete
 scheduleRoute.delete(function(req, res) {
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
@@ -286,7 +377,10 @@ scheduleRoute.delete(function(req, res) {
       res.json({message: 'Schedule not found', data: []});
     }
     schedule.destroy().then(function() {
-	//TODO: stuff
+			res.json({message: 'Schedule deleted', data: []});
+    }).catch(function(err) {
+	    res.status(500);
+	    res.json({message: getError(err), data: []});
     });
   });
 });
@@ -294,4 +388,3 @@ scheduleRoute.delete(function(req, res) {
 // Start the server
 app.listen(port);
 console.log('Server running on port ' + port);
-

@@ -4,20 +4,22 @@
 			<div class="header">
 			<h1>Create a Schedule</h1>
 			<p>Auto-generate a schedule or manually select classes</p>
+			<p id="createschedule_response">{{createschedule_response}}</p>
 			</div>
 			<div class="createWrapper">
-				<form data-abide ng-submit="createSchedule()" name="loginForm" class="login_Form">
+				<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
 					<label> Please enter a name for this schedule</label>
-						<input type="text" required ng-model="schedule_title" placeholder="Schedule Name">
+						<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
 					<label>Please select a semester for this schedule</label>
 					<select ng-model="semester">
 						<option value="Spring 2016">Spring 2016</option>
 						<option value="Fall 2016">Fall 2016</option>
 						<option value="Spring 2017">Spring 2017</option>
 					</select>
-					<div class="row text-center">
-						<a href="#/autoschedule" class="button round" ng-disabled="!schedule_title">Auto</a>
-						<a href="#/editschedule" class="button round" ng-disabled="!schedule_title">Manual</a>
+					<button class="button round" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
+					<div class="row text-center" ng-if="created">
+						<a href="#/autoschedule" class="button round">Auto</a>
+						<a href="#/editschedule" class="button round">Manual</a>
 					</div>
 				</form>
 			</div>

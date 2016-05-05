@@ -60,6 +60,7 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                   $scope.signup_response = 'Login successful!';
                   $('#signup_response').addClass('responded');
                   $window.localStorage['jwtToken'] = response.data.token;
+                  $window.localStorage['userpw'] = $scope.login_password;
                   Users.get().then(function(response){
                     console.log(response.data);
                   });
@@ -123,8 +124,40 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
     }
 
     $scope.updateUser = function (){
-        Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password);
+      //TODO: get the current user and get the schedule array!
+        Users.get().then(function(response){
+          var cur_user = response.data.data;
+          console.log("the schedule array in the user object is " + cur_user.schedules.toString());
+          Users.updateUser($scope.user_name, $scope.user_email, cur_user.schedules, $scope.user_password)
+           .then(function(response){
+                if(response.status == 200){
+                Users.get().then(function(response){
+                  if(response.status == 200){
+                    console.log(response.data.data);
+                    $scope.user = response.data.data;
+                  }
+                  else
+                    $window.location.href = '#/home';
+
+                  $scope.edit_response = "Edit user successful";
+                  $('#edituser_response').toggleClass('responded');
+                  setTimeout(function(){
+                    $('#edituser_response').toggleClass('responded');
+                  }, 3000);
+                });
+            }else{
+                $scope.edit_response = "Edit user fail";
+                $('#edituser_response').toggleClass('responded');
+                setTimeout(function(){
+                  $('#edituser_response').toggleClass('responded');
+                }, 3000);
+            }
+          })
+
+        });
+
     }
+
     $scope.close = function(){
       $window.location.href = '#/myschedules';
     }
@@ -140,19 +173,58 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
 
 
 
-mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
+    //Check if there is an authenticated user
+    if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+    else {
+      Users.get().then(function(response){
+        if(response.status == 200)
+          $scope.user = response.data.data;
+        else
+          $window.location.href = '#/home';
+      });
+    }
 
-/*  Classes.getBySemester().success(function(data){
-    $scope.classes = data.data;
-  });
-*/
-  // Need to get all classes for the selected semester
+  $scope.created = false;
+  $scope.createSchedule = function (){
+    $scope.created = true;
+    Schedules.add($scope.schedule_name, $scope.semester)
+             .then(function(response){
+                $scope.createschedule_response = response.data.message;
+                var updateScheduleID = response.data.data.id;
+                console.log(response.data.data);
+                $('#createschedule_response').toggleClass('responded');
+                setTimeout(function(){
+                  $('#createschedule_response').toggleClass('responded');
+                }, 5000);
+                
+                // //Update the schedule array of the current user
+                // **** NO NEED, BACKEND HANDLES THIS*****
+                // var user_updateArray = {};
+                // Users.get().then(function(response){
+                //    if(response.status == 200)
+                //       user_updateArray = response.data.data;
+                //     var updateScheduleArray = user_updateArray.schedules;
+                //     updateScheduleArray.push(updateScheduleID);
+                //     Users.updateUser(user_updateArray.name, user_updateArray.email, updateScheduleArray, $window.localStorage['userpw'])
+                //        .then(function(response){
+                //           console.log(response.data.data);
+                //           console.log(response.data.message);
+                //        })
+                // });
+                
 
-  $scope.schedule_title;
+             }, function(response){
+                $scope.createschedule_response = response.data.message;
+             });
+  }
 
-  $scope.autoSchedule = function(){
+   $scope.logout = function(){
+      $window.localStorage.removeItem('jwtToken');
+      $window.location.href = '#/home';
+    }
 
-  };
 
 }]);
 

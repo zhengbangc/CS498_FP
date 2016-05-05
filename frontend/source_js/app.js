@@ -8,7 +8,7 @@ app.config(['$routeProvider', function($routeProvider) {
   }).
   when('/createschedule', {
     templateUrl: 'partials/createschedule.html',
-    controller: 'CreateController'
+    controller: 'CreateScheduleController'
   }).
   when('/myschedules', {
     templateUrl: 'partials/myschedules.html',
@@ -39,3 +39,8 @@ app.config(['$routeProvider', function($routeProvider) {
   });
 }]);
 
+app.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+]);

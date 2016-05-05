@@ -104,6 +104,7 @@ var Schedule = sequelize.define('schedule', {
 });
 
 User.hasMany(Schedule, {as: 'Schedules'});
+Schedule.belongsTo(User);
 
 Class.hasMany(Section, {as: 'Sections'});
 
