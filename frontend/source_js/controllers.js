@@ -29,7 +29,7 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                     $scope.signup_response = 'Email already exists in the data base';
                   else{
                     $scope.signup_response = response.data.message;
-                    $window.localStorage['jwtToken'] = response.data.data.token;
+                    $window.sessionStorage['jwtToken'] = response.data.data.token;
                     setTimeout(function(){
                       $window.location.href = '#/myschedules';
                     },1000);
@@ -59,8 +59,8 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                 else{
                   $scope.signup_response = 'Login successful!';
                   $('#signup_response').addClass('responded');
-                  $window.localStorage['jwtToken'] = response.data.token;
-                  $window.localStorage['userpw'] = $scope.login_password;
+                  $window.sessionStorage['jwtToken'] = response.data.token;
+                  $window.sessionStorage['userpw'] = $scope.login_password;
                   Users.get().then(function(response){
                     console.log(response.data);
                   });
@@ -78,7 +78,6 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
 
 
 mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
-
   if(Users.isAuthed() == false)
         $window.location.href = '#/home';
   else {
@@ -92,18 +91,20 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
   }
 
   // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
-  $scope.semesters = [ 'Spring 2016', 'Fall 2016', 'Spring 2017', 'Fall 2017' ]; 
+  $scope.semesters = [];
   $scope.schedules = [];
   Users.get().then(function(response){
       var schedules = response.data.data.schedules;
       schedules.forEach(function(element){
-        // console.log(element);
           $scope.schedules.push({'id':element.id, 'name': element.name, 'semester': element.term});
+          if($scope.semesters.indexOf(element.term) == -1)
+            $scope.semesters.push(element.term);
       })
   })
 
   $scope.logout = function(){
-    $window.localStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('userpw');
     $window.location.href = '#/home';
   }
 }]);
@@ -161,7 +162,8 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
 
 
     $scope.logout = function(){
-      $window.localStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
       $window.location.href = '#/home';
     }
 }]);
@@ -205,7 +207,8 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
   }
 
    $scope.logout = function(){
-      $window.localStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
       $window.location.href = '#/home';
     }
 
