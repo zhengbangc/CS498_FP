@@ -110,3 +110,21 @@ mp4Services.factory('Login', function($http, $window){
         
     };
 });
+
+mp4Services.factory('Classes', function($window, $http){
+    var parseJWT = function(token){
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace('-', '+').replace('_', '/');
+        return JSON.parse($window.atob(base64));
+    }
+
+    return {
+        get: function(classID){
+            return $http.get('http://scheduler.intense.io/api/class/'+classID);
+        },
+        getByTerm: function(term){
+            var where = '?term=\"' + term.toString() + '\"}';
+            return $http.get('http://scheduler.intense.io/api/class' + where);
+        },
+    }
+});

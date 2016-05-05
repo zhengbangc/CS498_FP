@@ -237,13 +237,16 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
 
 mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
-/*  Classes.getBySemester().success(function(data){
-    $scope.classes = data.data;
-  });
-*/
-  // Need to get all classes for the selected semester
-
   $(document).foundation();
+
+  // Need to get all classes for the selected semester
+  //Classes.getByTerm("Spring 2016").success(function(data){
+  //  //$scope.classes = data.data;
+  //});
+  $scope.classes = {
+    'name': 'CS 101 - Hello World'
+  };
+
 
   $scope.section = { 
     'id': 8, 
