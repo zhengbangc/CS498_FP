@@ -430,61 +430,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
           fields.resourceContainer.hide();
           fields.subjectLabel.html("Class");
           fields.locationLabel.html("Where");
-          // add custom print button.
-          printButton = $("<button style='margin-left: 5px; float:right;'>Print</button>");
-          fields.buttons.append(printButton);
-          printButton.jqxButton({ theme: this.theme });
-          printButton.click(function () {
-            var appointment = editAppointment;
-            if (!appointment)
-                return;
-            var appointmentContent =
-              "<table class='printTable'>" +
-                  "<tr>" +
-                      "<td class='label'>Title</td>" +
-                      "<td>" + fields.subject.val() + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                      "<td class='label'>Where</td>" +
-                      "<td>" + fields.location.val() + "</td>" +
-                  "</tr>" +
-                  "<tr>" +
-                      "<td class='label'>Calendar</td>" +
-                      "<td>" + fields.resource.val() + "</td>" +
-                  "</tr>"
-             + "</table>";
-            var newWindow = window.open('', '', 'width=800, height=500'),
-            document = newWindow.document.open(),
-            pageContent =
-                '<!DOCTYPE html>\n' +
-                '<html>\n' +
-                '<head>\n' +
-                   '<meta charset="utf-8" />\n' +
-                   '<title>jQWidgets Scheduler</title>\n' +
-                    '<style>\n' +
-                     '.printTable {\n' +
-                        'border-color: #aaa;\n' +
-                        '}\n' +
-                     '.printTable .label {\n' +
-                        'font-weight: bold;\n' +
-                        '}\n' +
-                     '.printTable td{\n' +
-                        'padding: 4px 3px;\n' +
-                        'border: 1px solid #DDD;\n' +
-                        'vertical-align: top;\n' +
-                        '}\n' +
-                   '</style>' +
-               '</head>\n' +
-              '<body>\n' + appointmentContent + '\n</body>\n</html>';
-            try
-            {
-              document.write(pageContent);
-              document.close();
-            }
-            catch (error) {
-            }
-            newWindow.print();
-            });
+      
          },  // end modal/dialog window   
         ready: function () {
 
@@ -535,7 +481,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             resourceId: "calendar",
             recurrencePattern: "recurrenceRule",
             resizable: "resizable",
-            draggable: "draggable"
+            draggable: "draggable",
+            readOnly: "readOnly"
         },
         views:
         [
