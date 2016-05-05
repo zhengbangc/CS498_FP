@@ -29,7 +29,7 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                     $scope.signup_response = 'Email already exists in the data base';
                   else{
                     $scope.signup_response = response.data.message;
-                    $window.localStorage['jwtToken'] = response.data.data.token;
+                    $window.sessionStorage['jwtToken'] = response.data.data.token;
                     setTimeout(function(){
                       $window.location.href = '#/myschedules';
                     },1000);
@@ -59,8 +59,8 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                 else{
                   $scope.signup_response = 'Login successful!';
                   $('#signup_response').addClass('responded');
-                  $window.localStorage['jwtToken'] = response.data.token;
-                  $window.localStorage['userpw'] = $scope.login_password;
+                  $window.sessionStorage['jwtToken'] = response.data.token;
+                  $window.sessionStorage['userpw'] = $scope.login_password;
                   Users.get().then(function(response){
                     console.log(response.data);
                   });
@@ -78,7 +78,6 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
 
 
 mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
-
   if(Users.isAuthed() == false)
         $window.location.href = '#/home';
   else {
@@ -92,21 +91,20 @@ mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedule
   }
 
   // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
-
-  $scope.schedules = [ 
-    { 'id': 1000, name: 'My schedule 1', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2016' }, 
-    { 'id': 1001, name: 'My schedule 2', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Spring 2016' },
-    { 'id': 1002, name: 'My schedule 3', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2016' },
-    { 'id': 1003, name: 'My schedule 4', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2015' },
-    { 'id': 1004, name: 'My schedule 5', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2015' },
-    { 'id': 1005, name: 'My schedule 6', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2016' }, 
-    { 'id': 1006, name: 'My schedule 7', 'user': 1, 'classes': ['c1','c2','c3'], 'sections': ['s1','s2','s3'], 'semester': 'Fall 2016' }  
-    ];
-  $scope.semesters = [ 'Fall 2016', 'Spring 2016', 'Fall 2015', 'Spring 2015']; 
-  // $scope.user = { 'id': 1, 'name': 'Maggie Smith' };
+  $scope.semesters = [];
+  $scope.schedules = [];
+  Users.get().then(function(response){
+      var schedules = response.data.data.schedules;
+      schedules.forEach(function(element){
+          $scope.schedules.push({'id':element.id, 'name': element.name, 'semester': element.term});
+          if($scope.semesters.indexOf(element.term) == -1)
+            $scope.semesters.push(element.term);
+      })
+  })
 
   $scope.logout = function(){
-    $window.localStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('userpw');
     $window.location.href = '#/home';
   }
 }]);
@@ -128,7 +126,7 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
         Users.get().then(function(response){
           var cur_user = response.data.data;
           console.log("the schedule array in the user object is " + cur_user.schedules.toString());
-          Users.updateUser($scope.user_name, $scope.user_email, cur_user.schedules, $scope.user_password)
+          Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password)
            .then(function(response){
                 if(response.status == 200){
                 Users.get().then(function(response){
@@ -164,7 +162,8 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
 
 
     $scope.logout = function(){
-      $window.localStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
       $window.location.href = '#/home';
     }
 }]);
@@ -187,41 +186,29 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
     }
 
   $scope.created = false;
+  $scope.semester = 'Spring 2016';
   $scope.createSchedule = function (){
-    $scope.created = true;
     Schedules.add($scope.schedule_name, $scope.semester)
              .then(function(response){
-                $scope.createschedule_response = response.data.message;
-                var updateScheduleID = response.data.data.id;
-                console.log(response.data.data);
+                console.log(response.status);
+                if(response.status == 500)
+                    $scope.createschedule_response = 'Create schedule failed';
+                else{
+                  $scope.createschedule_response = response.data.message;
+                  $scope.created = true;
+                  console.log(response.data.data);
+                }
                 $('#createschedule_response').toggleClass('responded');
                 setTimeout(function(){
                   $('#createschedule_response').toggleClass('responded');
                 }, 5000);
-                
-                // //Update the schedule array of the current user
-                // **** NO NEED, BACKEND HANDLES THIS*****
-                // var user_updateArray = {};
-                // Users.get().then(function(response){
-                //    if(response.status == 200)
-                //       user_updateArray = response.data.data;
-                //     var updateScheduleArray = user_updateArray.schedules;
-                //     updateScheduleArray.push(updateScheduleID);
-                //     Users.updateUser(user_updateArray.name, user_updateArray.email, updateScheduleArray, $window.localStorage['userpw'])
-                //        .then(function(response){
-                //           console.log(response.data.data);
-                //           console.log(response.data.message);
-                //        })
-                // });
-                
 
-             }, function(response){
-                $scope.createschedule_response = response.data.message;
              });
   }
 
    $scope.logout = function(){
-      $window.localStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
       $window.location.href = '#/home';
     }
 

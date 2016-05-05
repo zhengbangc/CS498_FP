@@ -8,19 +8,19 @@ mp4Services.factory('Schedules', function($window, $http){
     }
 
     return {
-        get: function(userID){
-            return $http.get(baseUrl);
+        get: function(scheduleID){
+            return $http.get('http://scheduler.intense.io/api/schedules/'+scheduleID);
         },
         getByUser: function(userID, token){
             var where = '?where={ \"user\": \"' + userID.toString() + '\"}';    //or whatever
             return $http.get(baseUrl + where);
         },
         add: function(schedulename, semester){
-            var tokenObject = parseJWT($window.localStorage['jwtToken']);
+            var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
             var promise = $http({
                 method: 'POST',
                 url: 'http://scheduler.intense.io/api/schedules',
-                data: $.param({name: schedulename, user: tokenObject.id, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: schedulename, user: tokenObject.id, term: semester, token: $window.sessionStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 
@@ -43,7 +43,7 @@ mp4Services.factory('Users', function($http, $window) {
 
     return {
         get: function() {
-            var tokenObject = parseJWT($window.localStorage['jwtToken']);
+            var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
             var promise = $http.get('http://scheduler.intense.io/api/user/' + tokenObject.id)
                                 .then(function(response){
                                     return response;
@@ -67,23 +67,19 @@ mp4Services.factory('Users', function($http, $window) {
             return promise;
         },
         isAuthed: function(){
-            var token = $window.localStorage['jwtToken'];
+            var token = $window.sessionStorage['jwtToken'];
             if(token){
                 var tokenObject = parseJWT(token);
                 return Math.round(new Date().getTime() / 1000) <= tokenObject.exp;
             } else
                 return false;
         },
-        updateUser: function(username, useremail, scheduleArray,userpass){
-            var tokenObject = parseJWT($window.localStorage['jwtToken']);
-            var testarray = [];
-            testarray.push(55);
-            testarray.push(66);
-            testarray.push(77);
+        updateUser: function(username, useremail, userpass){
+            var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/user/' + tokenObject.id,
-                data: $.param({name: username, email: useremail, schedules: testarray, pass: userpass, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: username, email: useremail, pass: userpass, token: $window.sessionStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 return response;

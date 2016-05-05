@@ -11,15 +11,15 @@
 					<label> Please enter a name for this schedule</label>
 						<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
 					<label>Please select a semester for this schedule</label>
-					<select ng-model="semester">
+					<select required ng-model="semester">
 						<option value="Spring 2016">Spring 2016</option>
 						<option value="Fall 2016">Fall 2016</option>
 						<option value="Spring 2017">Spring 2017</option>
+						<option value="Fall 2017">Fall 2017</option>
 					</select>
 					<button class="button round" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
 					<div class="row text-center" ng-if="created">
-						<a href="#/autoschedule" class="button round">Auto</a>
-						<a href="#/editschedule" class="button round">Manual</a>
+						<a href="#/editschedule" class="button round">Edit Schedule</a>
 					</div>
 				</form>
 			</div>
