@@ -256,14 +256,32 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 */
   // Need to get all classes for the selected semester
   $scope.section = { 
-    'id': 1, 
-    'crn': 22222, 
-    'name':'Artificial Intelligence', 
-    'code':'CS440', 
-    'hours':3, 
-    'type':3, 
-    'times': [new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
-    'location':'123 Sesame St' 
+    'id': 8, 
+    'crn': 22222,
+    'name':'CS 440 Artificial Intelligence', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
+    'class_location':'123 Sesame St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+    $scope.section2 = { 
+    'id': 9, 
+    'crn': 22222,
+    'name':'CS 357', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'class_location':'Elm St',
+    'restrictions': 'Pre-req: CS 225'
   };
   $scope.schedule = { 'name': 'My First Schedule' };
 
@@ -282,33 +300,39 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointments = new Array();
 
     var appointment1 = {
-        id: 'id1',
+        id: "id1",
         description: "System programming",
-        location: "",
+        location: "1404 Siebel",
         subject: "CS 241",
         calendar: "Class 1",
         start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
         end: new Date(2016, 10, 23, 9, 50, 0),
+        resizable: false,
+        draggable: false
     }
 
     var appointment2 = {
-        id: 'id2',
+        id: "id2",
         description: "",
         location: "",
         subject: "CS 233",
         calendar: "Class 2",
         start: new Date(2016, 10, 24, 10, 0, 0),
         end: new Date(2016, 10, 24, 10, 50, 0),
+        resizable: false,
+        draggable: false
     }
 
     var appointment3 = {
-        id: 'id3',
+        id: "id3",
         description: "",
         location: "",
         subject: "CS 357",
         calendar: "Class 3",
         start: new Date(2016, 10, 27, 11, 0, 0),
         end: new Date(2016, 10, 27, 13, 0, 0),
+        resizable: false,
+        draggable: false
     }
 
     var appointment4 = {
@@ -319,6 +343,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         calendar: "Class 4",
         start: new Date(2016, 10, 23, 16, 0, 0),
         end: new Date(2016, 10, 23, 18, 0, 0),
+        resizable: false,
+        draggable: false
     }
 
     var appointment5 = {
@@ -329,6 +355,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         calendar: "Class 5",
         start: new Date(2016, 10, 25, 15, 0, 0),
         end: new Date(2016, 10, 25, 17, 0, 0),
+        resizable: false,
+        draggable: false
     }
 
     var appointment6 = {
@@ -339,6 +367,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         calendar: "Class 6",
         start: new Date(2016, 10, 26, 14, 0, 0),
         end: new Date(2016, 10, 26, 16, 0, 0),
+        resizable: false,
+        draggable: false
     }
     appointments.push(appointment1);
     appointments.push(appointment2);
@@ -358,7 +388,10 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             { name: 'subject', type: 'string' },
             { name: 'calendar', type: 'string' },
             { name: 'start', type: 'date' },
-            { name: 'end', type: 'date' }
+            { name: 'end', type: 'date' },
+            { name: 'recurrenceRule', type: 'string' },
+            { name: 'draggable', type: 'boolean' },
+            { name: 'resizable', type: 'boolean' }
         ],
         id: 'id',
         localData: appointments
@@ -375,16 +408,112 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         toolbarHeight: 0,
         enableHover: false,
         timeZone: 'Central Standard Time',
+        editDialogDateTimeFormatString: "MM/dd/yyyy hh:mm tt",
+        // *** DIALOG / MODAL WINDOW:
+        editDialogCreate: function (dialog, fields, editAppointment) {
+          // hide repeat option
+          fields.repeatContainer.hide();
+          // hide status option
+          fields.statusContainer.hide();
+          // hide timeZone option
+          fields.timeZoneContainer.hide();
+          // hide color option
+          fields.colorContainer.hide();
+          // hide from option
+          fields.fromContainer.hide();
+          // hdie to option
+          fields.toContainer.hide();
+          // hide resource
+          fields.resourceContainer.hide();
+          fields.subjectLabel.html("Class");
+          fields.locationLabel.html("Where");
+          // add custom print button.
+          printButton = $("<button style='margin-left: 5px; float:right;'>Print</button>");
+          fields.buttons.append(printButton);
+          printButton.jqxButton({ theme: this.theme });
+          printButton.click(function () {
+            var appointment = editAppointment;
+            if (!appointment)
+                return;
+            var appointmentContent =
+              "<table class='printTable'>" +
+                  "<tr>" +
+                      "<td class='label'>Title</td>" +
+                      "<td>" + fields.subject.val() + "</td>" +
+                  "</tr>" +
+                  "<tr>" +
+                      "<td class='label'>Where</td>" +
+                      "<td>" + fields.location.val() + "</td>" +
+                  "</tr>" +
+                  "<tr>" +
+                      "<td class='label'>Calendar</td>" +
+                      "<td>" + fields.resource.val() + "</td>" +
+                  "</tr>"
+             + "</table>";
+            var newWindow = window.open('', '', 'width=800, height=500'),
+            document = newWindow.document.open(),
+            pageContent =
+                '<!DOCTYPE html>\n' +
+                '<html>\n' +
+                '<head>\n' +
+                   '<meta charset="utf-8" />\n' +
+                   '<title>jQWidgets Scheduler</title>\n' +
+                    '<style>\n' +
+                     '.printTable {\n' +
+                        'border-color: #aaa;\n' +
+                        '}\n' +
+                     '.printTable .label {\n' +
+                        'font-weight: bold;\n' +
+                        '}\n' +
+                     '.printTable td{\n' +
+                        'padding: 4px 3px;\n' +
+                        'border: 1px solid #DDD;\n' +
+                        'vertical-align: top;\n' +
+                        '}\n' +
+                   '</style>' +
+               '</head>\n' +
+              '<body>\n' + appointmentContent + '\n</body>\n</html>';
+            try
+            {
+              document.write(pageContent);
+              document.close();
+            }
+            catch (error) {
+            }
+            newWindow.print();
+            });
+         },  // end modal/dialog window   
         ready: function () {
-            // do this for all appointments:
-            $("#scheduler").jqxScheduler('beginAppointmentsUpdate');
-            $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
-            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id1', 'resizable', false);
-            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id1', 'resizable', false);
-            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id2', 'resizable', false);
-            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id3', 'resizable', false);
-            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id4', 'resizable', false);
-            $("#scheduler").jqxScheduler('endAppointmentsUpdate');
+
+            $('#scheduler').on('appointmentClick', function (event) { 
+              var args = event.args; 
+              var appointment = args.appointment; 
+              // make the dialog open in the middle
+              var vw = $( window ).width();
+              var vh = $( window ).height();
+              var left = vw/2;
+              var top = vh/2;
+              $('#scheduler').jqxScheduler('openDialog', left, top);  //left,top
+            });
+
+            $scope.addSection = function(sec){
+              // ADD for loop: for days that this section repeats:
+              var newappointment = {
+                id: 'id' + sec.id.toString(),
+                description: sec.name,  // name of the class ("Artificial Intelligence")
+                location: sec.class_location,
+                subject: sec.name,  // e.g. "CS440"
+                start: sec.class_times[0], //(year, month, day, hour, minute, second)
+                end: sec.class_times[1],
+                resizable: false,
+                draggable: false
+              }
+              appointments.push(newappointment);
+              // Add appointment and ensure it is not draggable or resizables
+              $('#scheduler').jqxScheduler('addAppointment', newappointment);
+              console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
+          };
+
         },
         resources:
         {
@@ -400,7 +529,10 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             description: "description",
             location: "location",
             subject: "subject",
-            resourceId: "calendar"
+            resourceId: "calendar",
+            recurrencePattern: "recurrenceRule",
+            resizable: "resizable",
+            draggable: "draggable"
         },
         views:
         [
@@ -409,26 +541,10 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     });
 
 
-    //add section to calendar
-    $scope.addSection = function(){
-        var sec = $scope.section;
-        var newappointment = {
-          id: sec.id,
-          description: sec.name,  // name of the class ("Artificial Intelligence")
-          location: sec.location,
-          subject: sec.code,  // e.g. "CS440"
-          calendar: sec.code,
-          start: sec.times[0], //(year, month, day, hour, minute, second)
-          end: sec.times[1],
-          resizable: false,
-          draggable: false
-        }
-        //appointments.push(newappointment);
-        $('#scheduler').jqxScheduler('addAppointment', newappointment);
-        console.log('Added section to calendar');
-    }
+    // Add a section to calendar
 
-    $scope.addSection();
+    $scope.addSection($scope.section);
+    $scope.addSection($scope.section2);
 
     // **** end calendar view
 
