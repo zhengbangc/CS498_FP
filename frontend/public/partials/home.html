@@ -24,8 +24,8 @@
 			<div class="signupWrapper">
 				<button class="button signup_btn" ng-click="open_signupForm()">Sign Up</button>
 				<form data-abide ng-submit="signupForm.$valid && signup()" name="signupForm" class="signup_Form">
-					<input type="email" required ng-model="signup_email" placeholder="Email">
 					<input type="text" required ng-model="signup_name" placeholder="Name">
+					<input type="email" required ng-model="signup_email" placeholder="Email">
 					<input type="password" required ng-model="signup_password" placeholder="Please create a password">
 					<input type="password" required ng-model="signup_password_confirm" placeholder="Please re-enter your password">
 					<button class="button" type="submit" id="submit" value="Submit" ng-if="signup_password == signup_password_confirm">Sign Up</button>

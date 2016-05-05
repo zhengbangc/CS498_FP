@@ -8,8 +8,8 @@ mp4Services.factory('Schedules', function($window, $http){
     }
 
     return {
-        get: function(userID){
-            return $http.get(baseUrl);
+        get: function(scheduleID){
+            return $http.get('http://scheduler.intense.io/api/schedules/'+scheduleID);
         },
         getByUser: function(userID, token){
             var where = '?where={ \"user\": \"' + userID.toString() + '\"}';    //or whatever
@@ -20,7 +20,7 @@ mp4Services.factory('Schedules', function($window, $http){
             var promise = $http({
                 method: 'POST',
                 url: 'http://scheduler.intense.io/api/schedules',
-                data: $.param({name: schedulename, user: tokenObject.id, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: schedulename, user: tokenObject.id, term: semester, token: $window.localStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 
@@ -74,16 +74,12 @@ mp4Services.factory('Users', function($http, $window) {
             } else
                 return false;
         },
-        updateUser: function(username, useremail, scheduleArray,userpass){
+        updateUser: function(username, useremail, userpass){
             var tokenObject = parseJWT($window.localStorage['jwtToken']);
-            var testarray = [];
-            testarray.push(55);
-            testarray.push(66);
-            testarray.push(77);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/user/' + tokenObject.id,
-                data: $.param({name: username, email: useremail, schedules: testarray, pass: userpass, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: username, email: useremail, pass: userpass, token: $window.localStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 return response;
