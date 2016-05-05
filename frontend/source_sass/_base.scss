@@ -16,6 +16,12 @@ p{
 	font-weight: 300;
 }
 
+[data-key="jqxscheduler_0"] {
+	span{
+		display:none;
+	}
+}
+
 .invisible-small{ //hide things with this class on small screens
 	@include breakpoint(small only) { display: none; }
 }

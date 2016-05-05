@@ -237,13 +237,16 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
 
 mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
-/*  Classes.getBySemester().success(function(data){
-    $scope.classes = data.data;
-  });
-*/
-  // Need to get all classes for the selected semester
-
   $(document).foundation();
+
+  // Need to get all classes for the selected semester
+  //Classes.getByTerm("Spring 2016").success(function(data){
+  //  //$scope.classes = data.data;
+  //});
+  $scope.classes = {
+    'name': 'CS 101 - Hello World'
+  };
+
 
   $scope.section = { 
     'id': 8, 
@@ -298,55 +301,60 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
         end: new Date(2016, 10, 23, 9, 50, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
 
     var appointment2 = {
         id: "id2",
-        description: "",
-        location: "",
+        description: "Computer Architecture",
+        location: "1404 Siebel",
         subject: "CS 233",
         calendar: "Class 2",
         start: new Date(2016, 10, 24, 10, 0, 0),
         end: new Date(2016, 10, 24, 10, 50, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
 
     var appointment3 = {
         id: "id3",
-        description: "",
-        location: "",
+        description: "Numerical Methods",
+        location: "1404 Siebel",
         subject: "CS 357",
         calendar: "Class 3",
         start: new Date(2016, 10, 27, 11, 0, 0),
         end: new Date(2016, 10, 27, 13, 0, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
 
     var appointment4 = {
         id: 'id4',
-        description: "",
-        location: "",
+        description: "The Art and Science of Web Programming",
+        location: "1404 Siebel",
         subject: "CS 498RK1",
         calendar: "Class 4",
         start: new Date(2016, 10, 23, 16, 0, 0),
         end: new Date(2016, 10, 23, 18, 0, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
 
     var appointment5 = {
         id: 'id5',
-        description: "",
-        location: "",
+        description: "Introduction to Horticulture",
+        location: "1404 Siebel",
         subject: "Hort 100",
         calendar: "Class 5",
         start: new Date(2016, 10, 25, 15, 0, 0),
         end: new Date(2016, 10, 25, 17, 0, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
 
     var appointment6 = {
@@ -358,7 +366,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         start: new Date(2016, 10, 26, 14, 0, 0),
         end: new Date(2016, 10, 26, 16, 0, 0),
         resizable: false,
-        draggable: false
+        draggable: false,
+        readOnly: true
     }
     appointments.push(appointment1);
     appointments.push(appointment2);
@@ -381,7 +390,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             { name: 'end', type: 'date' },
             { name: 'recurrenceRule', type: 'string' },
             { name: 'draggable', type: 'boolean' },
-            { name: 'resizable', type: 'boolean' }
+            { name: 'resizable', type: 'boolean' },
+            { name: 'readOnly', type: 'boolean' }
         ],
         id: 'id',
         localData: appointments
@@ -399,6 +409,12 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         enableHover: false,
         timeZone: 'Central Standard Time',
         editDialogDateTimeFormatString: "MM/dd/yyyy hh:mm tt",
+        /*renderAppointment: function(data){
+          //var img = "<img style='top: 2px; position: relative;' src='../../images/person.png'/>";
+          console.log('data.appointment.id = ' + data.appointment.id)
+          data.html = data.appointment.subject + '\n' + data.appointment.description + '<button class="close-button" type="button" ng-model="apptID" ng-value="'+ data.appointment.id +'" ng-click="removeAppointment()"><span aria-hidden="true">&times;</span></button>';
+          return data;
+        },*/
         // *** DIALOG / MODAL WINDOW:
         editDialogCreate: function (dialog, fields, editAppointment) {
           // hide repeat option
@@ -421,16 +437,30 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
          },  // end modal/dialog window   
         ready: function () {
 
+            $scope.apptID = "id1";
+            $('[data-key="jqxscheduler_0"]').html("nothing");
+
+            // On clicking twice, delete a class
             $('#scheduler').on('appointmentClick', function (event) { 
               var args = event.args; 
               var appointment = args.appointment; 
-              // make the dialog open in the middle
-              var vw = $( window ).width();
-              var vh = $( window ).height();
-              var left = vw/2;
-              var top = vh/2;
-              $('#scheduler').jqxScheduler('openDialog', left, top);  //left,top
+              // on one click, make background less opaque
+              if (!appointment.clicked){
+                console.log("first click");
+                appointment.clicked = 1;
+              }
+              // after the second click, make event disappear
+              else {
+                console.log("second click, should delete");
+                $('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+              }
             });
+
+            $scope.removeAppointment = function(){
+              console.log('removeAppointment()');
+              console.log('removing ' + $scope.apptID);
+              $('#scheduler').jqxScheduler('deleteAppointment', $scope.apptID);
+            }
 
             $scope.addSection = function(sec){
               // ADD for loop: for days that this section repeats:
@@ -442,7 +472,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
                 start: sec.class_times[0], //(year, month, day, hour, minute, second)
                 end: sec.class_times[1],
                 resizable: false,
-                draggable: false
+                draggable: false,
+                readOnly: true
               }
               appointments.push(newappointment);
               // Add appointment and ensure it is not draggable or resizables
