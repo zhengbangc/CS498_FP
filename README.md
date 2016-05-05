@@ -30,6 +30,7 @@
 |id|int|
 |crn|int|
 |name|string|
+|term|string|
 |section_code|string|
 |class_location|string|
 |instructor|string|
@@ -45,7 +46,7 @@
 |name|string|
 |email|string|
 |hash|string|
-|schedules|[ ]|
+|schedules|array of Schedules|
 
 ### Schedule
 |Name|Type|
@@ -53,8 +54,7 @@
 |id|int|
 |name|string|
 |user|int|
-|classes|array of Class|
-|sections|array of Section|
+|term|string|
 
 ## API Calls
 
