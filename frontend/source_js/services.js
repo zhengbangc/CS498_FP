@@ -17,13 +17,13 @@ mp4Services.factory('Schedules', function($window, $http){
         },
         add: function(schedulename, semester){
             var tokenObject = parseJWT($window.localStorage['jwtToken']);
-            // console.log(tokenObject.id);
             var promise = $http({
                 method: 'POST',
                 url: 'http://scheduler.intense.io/api/schedules',
-                data: $.param({name: schedulename, userId: tokenObject.id, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: schedulename, user: tokenObject.id, token: $window.localStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
+                
                 return response;
             }, function(response){
                 return response;
@@ -76,9 +76,10 @@ mp4Services.factory('Users', function($http, $window) {
         },
         updateUser: function(username, useremail, scheduleArray,userpass){
             var tokenObject = parseJWT($window.localStorage['jwtToken']);
-            console.log("updateUser(): scheduleArray is "+scheduleArray);
             var testarray = [];
             testarray.push(55);
+            testarray.push(66);
+            testarray.push(77);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/user/' + tokenObject.id,

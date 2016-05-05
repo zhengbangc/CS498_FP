@@ -127,6 +127,7 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
       //TODO: get the current user and get the schedule array!
         Users.get().then(function(response){
           var cur_user = response.data.data;
+          console.log("the schedule array in the user object is " + cur_user.schedules.toString());
           Users.updateUser($scope.user_name, $scope.user_email, cur_user.schedules, $scope.user_password)
            .then(function(response){
                 if(response.status == 200){
@@ -173,6 +174,7 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
 
 
 mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
+    //Check if there is an authenticated user
     if(Users.isAuthed() == false)
         $window.location.href = '#/home';
     else {
@@ -196,20 +198,21 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
                 setTimeout(function(){
                   $('#createschedule_response').toggleClass('responded');
                 }, 5000);
-                var user_updateArray = {};
-                Users.get().then(function(response){
-                   if(response.status == 200)
-                      user_updateArray = response.data.data;
-                    var updateScheduleArray = user_updateArray.schedules;
-                    updateScheduleArray.push(updateScheduleID);
-                    console.log(updateScheduleArray);
-                    Users.updateUser(user_updateArray.name, user_updateArray.email, updateScheduleArray, $window.localStorage['userpw'])
-                       .then(function(response){
-                          console.log(response.data.data);
-                          console.log(response.data.message);
-                       })
-
-                });
+                
+                // //Update the schedule array of the current user
+                // **** NO NEED, BACKEND HANDLES THIS*****
+                // var user_updateArray = {};
+                // Users.get().then(function(response){
+                //    if(response.status == 200)
+                //       user_updateArray = response.data.data;
+                //     var updateScheduleArray = user_updateArray.schedules;
+                //     updateScheduleArray.push(updateScheduleID);
+                //     Users.updateUser(user_updateArray.name, user_updateArray.email, updateScheduleArray, $window.localStorage['userpw'])
+                //        .then(function(response){
+                //           console.log(response.data.data);
+                //           console.log(response.data.message);
+                //        })
+                // });
                 
 
              }, function(response){
@@ -221,7 +224,7 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
       $window.localStorage.removeItem('jwtToken');
       $window.location.href = '#/home';
     }
-  
+
 
 }]);
 
