@@ -60,6 +60,7 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
                   $scope.signup_response = 'Login successful!';
                   $('#signup_response').addClass('responded');
                   $window.localStorage['jwtToken'] = response.data.token;
+                  $window.localStorage['userpw'] = $scope.login_password;
                   Users.get().then(function(response){
                     console.log(response.data);
                   });
@@ -128,23 +129,28 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
           var cur_user = response.data.data;
           Users.updateUser($scope.user_name, $scope.user_email, cur_user.schedules, $scope.user_password)
            .then(function(response){
-            console.log(response.data.message);
-              Users.get().then(function(response){
-              if(response.status == 200){
-                $scope.user = response.data.data;
-              }
-              else
-                $window.location.href = '#/home';
+                if(response.status == 200){
+                Users.get().then(function(response){
+                  if(response.status == 200){
+                    console.log(response.data.data);
+                    $scope.user = response.data.data;
+                  }
+                  else
+                    $window.location.href = '#/home';
 
-              $scope.edit_response = "Edit user successful";
-              $('#edituser_response').toggleClass('responded');
-              setTimeout(function(){
+                  $scope.edit_response = "Edit user successful";
+                  $('#edituser_response').toggleClass('responded');
+                  setTimeout(function(){
+                    $('#edituser_response').toggleClass('responded');
+                  }, 3000);
+                });
+            }else{
+                $scope.edit_response = "Edit user fail";
                 $('#edituser_response').toggleClass('responded');
-                $window.location.href = '#/home';
-              }, 3000);
-
-
-            });
+                setTimeout(function(){
+                  $('#edituser_response').toggleClass('responded');
+                }, 3000);
+            }
           })
 
         });
@@ -180,8 +186,6 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
 
   $scope.created = false;
   $scope.createSchedule = function (){
-    console.log($scope.schedule_name);
-    console.log($scope.semester);
     $scope.created = true;
     Schedules.add($scope.schedule_name, $scope.semester)
              .then(function(response){
@@ -192,14 +196,18 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
                 setTimeout(function(){
                   $('#createschedule_response').toggleClass('responded');
                 }, 5000);
-                var updateUser = {};
+                var user_updateArray = {};
                 Users.get().then(function(response){
                    if(response.status == 200)
-                      updateUser = response.data.data;
-                    var updateScheduleArray = updateUser.schedules;
+                      user_updateArray = response.data.data;
+                    var updateScheduleArray = user_updateArray.schedules;
                     updateScheduleArray.push(updateScheduleID);
                     console.log(updateScheduleArray);
-                    // Users.updateUser(updateUser.name, updateUser.email, )
+                    Users.updateUser(user_updateArray.name, user_updateArray.email, updateScheduleArray, $window.localStorage['userpw'])
+                       .then(function(response){
+                          console.log(response.data.data);
+                          console.log(response.data.message);
+                       })
 
                 });
                 
@@ -208,6 +216,12 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
                 $scope.createschedule_response = response.data.message;
              });
   }
+
+   $scope.logout = function(){
+      $window.localStorage.removeItem('jwtToken');
+      $window.location.href = '#/home';
+    }
+  
 
 }]);
 

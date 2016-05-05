@@ -76,10 +76,13 @@ mp4Services.factory('Users', function($http, $window) {
         },
         updateUser: function(username, useremail, scheduleArray,userpass){
             var tokenObject = parseJWT($window.localStorage['jwtToken']);
+            console.log("updateUser(): scheduleArray is "+scheduleArray);
+            var testarray = [];
+            testarray.push(55);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/user/' + tokenObject.id,
-                data: $.param({name: username, email: useremail, schedules: scheduleArray, pass: userpass, token: $window.localStorage['jwtToken']}),
+                data: $.param({name: username, email: useremail, schedules: testarray, pass: userpass, token: $window.localStorage['jwtToken']}),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 return response;
