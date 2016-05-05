@@ -210,75 +210,63 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointments = new Array();
 
     var appointment1 = {
-        id: 1,
-        description: "George brings projector for presentations.",
+        id: 'id1',
+        description: "System programming",
         location: "",
         subject: "CS 241",
         calendar: "Class 1",
         start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
         end: new Date(2016, 10, 23, 9, 50, 0),
-        resizable: false,
-        draggable: false
     }
 
     var appointment2 = {
-        id: 2,
+        id: 'id2',
         description: "",
         location: "",
         subject: "CS 233",
         calendar: "Class 2",
         start: new Date(2016, 10, 24, 10, 0, 0),
         end: new Date(2016, 10, 24, 10, 50, 0),
-        resizable: false,
-        draggable: false
     }
 
     var appointment3 = {
-        id: 3,
+        id: 'id3',
         description: "",
         location: "",
         subject: "CS 357",
         calendar: "Class 3",
         start: new Date(2016, 10, 27, 11, 0, 0),
         end: new Date(2016, 10, 27, 13, 0, 0),
-        resizable: false,
-        draggable: false
     }
 
     var appointment4 = {
-        id: 4,
+        id: 'id4',
         description: "",
         location: "",
         subject: "CS 498RK1",
         calendar: "Class 4",
         start: new Date(2016, 10, 23, 16, 0, 0),
         end: new Date(2016, 10, 23, 18, 0, 0),
-        resizable: false,
-        draggable: false
     }
 
     var appointment5 = {
-        id: 5,
+        id: 'id5',
         description: "",
         location: "",
         subject: "Hort 100",
         calendar: "Class 5",
         start: new Date(2016, 10, 25, 15, 0, 0),
         end: new Date(2016, 10, 25, 17, 0, 0),
-        resizable: false,
-        draggable: false
     }
 
     var appointment6 = {
-        id: 6,
+        id: 'id6',
         description: "",
         location: "",
         subject: "Interview with Nancy",
         calendar: "Class 6",
         start: new Date(2016, 10, 26, 14, 0, 0),
         end: new Date(2016, 10, 26, 16, 0, 0),
-        resizable: false,
-        draggable: false
     }
     appointments.push(appointment1);
     appointments.push(appointment2);
@@ -292,7 +280,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     {
         dataType: "array",
         dataFields: [
-            { name: 'id', type: 'int' },
+            { name: 'id', type: 'string' },
             { name: 'description', type: 'string' },
             { name: 'location', type: 'string' },
             { name: 'subject', type: 'string' },
@@ -308,15 +296,23 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     $("#scheduler").jqxScheduler({
         date: new $.jqx.date(2016, 11, 23),
         width: '100vw',
-        height: '100vh',
+        height: '70vh',
         source: adapter,
         view: 'weekView',
         showLegend: false,  //bottom with colored squares
         toolbarHeight: 0,
-        enableHover: true,
+        enableHover: false,
         timeZone: 'Central Standard Time',
         ready: function () {
+            // do this for all appointments:
+            $("#scheduler").jqxScheduler('beginAppointmentsUpdate');
             $("#scheduler").jqxScheduler('ensureAppointmentVisible', 'id1');
+            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id1', 'resizable', false);
+            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id1', 'resizable', false);
+            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id2', 'resizable', false);
+            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id3', 'resizable', false);
+            $("#scheduler").jqxScheduler('setAppointmentProperty', 'id4', 'resizable', false);
+            $("#scheduler").jqxScheduler('endAppointmentsUpdate');
         },
         resources:
         {
