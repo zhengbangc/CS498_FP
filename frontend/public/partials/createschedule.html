@@ -1,31 +1,28 @@
-<div class="createschedule" ng-controller='CreateScheduleController'>
+<div class="createSchedule" ng-controller='CreateScheduleController'>
 
-	<div class="body_container">
-			<div class="header">
-			<h1>Create a Schedule</h1>
-			<p>Auto-generate a schedule or manually select classes</p>
-			<p id="createschedule_response">{{createschedule_response}}</p>
-			</div>
-			<div class="createWrapper">
-				<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
-					<label> Please enter a name for this schedule</label>
-						<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
-					<label>Please select a semester for this schedule</label>
-					<select required ng-model="semester">
-						<option value="Spring 2016">Spring 2016</option>
-						<option value="Fall 2016">Fall 2016</option>
-						<option value="Spring 2017">Spring 2017</option>
-						<option value="Fall 2017">Fall 2017</option>
-						<option value="Spring 2018">Spring 2018</option>
-						<option value="Fall 2018">Fall 2018</option>
-					</select>
-					<button class="button round" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
-					<div class="row text-center" ng-if="created">
-						<a href="#/editschedule" class="button round">Edit Schedule</a>
-					</div>
-				</form>
-			</div>
-	</div>
+	<div class="row text-center main padded">
+	 <h1 class="text-center">Create a Schedule</h1>
+		<p>Create your schedule</p>
+		<p>{{createschedule_response}}</p>
+		<div class="container">
+			<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
+				<label> Please enter a name for this schedule</label>
+					<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
+				<label>Please select a semester for this schedule</label>
+				<select required ng-model="semester">
+					<option value="Spring 2016">Spring 2016</option>
+					<option value="Fall 2016">Fall 2016</option>
+					<option value="Spring 2017">Spring 2017</option>
+					<option value="Fall 2017">Fall 2017</option>
+					<option value="Spring 2018">Spring 2018</option>
+					<option value="Fall 2018">Fall 2018</option>
+				</select>
+				<button class="button round" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
+				<div class="row text-center" ng-if="created">
+					<a href="#/editschedule" class="button round">Edit Schedule</a>
+				</div>
+			</form>
+		</div>
 
 
 
