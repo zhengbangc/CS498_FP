@@ -147,6 +147,6 @@ mp4Services.factory('Classes', function($window, $http){
         getByTerm: function(term){
             var where = '?term=' + term.toString();
             return $http.get('http://scheduler.intense.io/api/class' + where);
-        },
+        }
     }
 });

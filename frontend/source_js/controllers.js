@@ -72,7 +72,11 @@ mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Log
            })
     }
 
-
+     $(".signup_Form").bind("keypress", function(e) {
+            if (e.keyCode == 13) {
+                return false;
+            }
+      });
 }]);
 
 
@@ -168,10 +172,6 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
     }
 }]);
 
-
-
-
-
 mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
     //Check if there is an authenticated user
     if(Users.isAuthed() == false)
@@ -206,11 +206,11 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
              });
   }
 
-   $scope.logout = function(){
-      $window.sessionStorage.removeItem('jwtToken');
-      $window.sessionStorage.removeItem('userpw');
-      $window.location.href = '#/home';
-    }
+  $scope.logout = function(){
+    $window.sessionStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('userpw');
+    $window.location.href = '#/home';
+  }
 
 
 }]);
@@ -235,17 +235,51 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
 
 
 
-mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules','Classes','Users','$window','$routeParams', function($scope, $http, Schedules, Classes,Users, $window, $routeParams) {
+    $(document).foundation();
+    if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+    else {
+      Users.get().then(function(response){
+        if(response.status == 200)
+          $scope.user = response.data.data;
+        else
+          $window.location.href = '#/home';
+      });
+    }
 
-  $(document).foundation();
+    $scope.logout = function(){
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
+      $window.location.href = '#/home';
+    }
 
-  // Need to get all classes for the selected semester
-  //Classes.getByTerm("Spring 2016").success(function(data){
-  //  //$scope.classes = data.data;
-  //});
-  $scope.classes = {
-    'name': 'CS 101 - Hello World'
-  };
+
+  $scope.classes = [];
+  Schedules.get($routeParams._id).then(function(response){
+      console.log(response.data.data);
+      $scope.schedule = response.data.data;
+  }).then(function(){
+    Classes.getByTerm($scope.schedule.term).then(function(response){
+      // console.log(response.data.data);
+      $scope.classes = response.data.data;
+    })
+
+    $scope.selectClass = function(cur_class){
+      console.log(cur_class.id);
+      Classes.get(cur_class.id).then(function(response){
+          $scope.sections = response.data.data.Sections;
+          console.log(response.data.data.Sections);
+          $scope.days = ['No day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      })
+    }
+
+    
+
+
+
+  })
+
 
   $scope.saveSchedule = function(){
     console.log("schedule saving");
@@ -286,7 +320,6 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     'class_location':'Elm St',
     'restrictions': 'Pre-req: CS 225'
   };
-  $scope.schedule = { 'name': 'My First Schedule' };
 
 
   $scope.toggleCalendar = function(){
