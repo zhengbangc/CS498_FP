@@ -32,6 +32,9 @@
 					&:nth-child(5){
 						background: #edd9c0;
 					}
+					&:nth-child(6){
+						background: #DACFE3;
+					}
 					h3{
 						position: absolute;
 						display: inline-block;
@@ -43,14 +46,18 @@
 					}
 					&>div{
 						position: absolute;
-						left: 200px;
+						width: 70%;
+						left: 0;
+						right: 0;
+						margin-left: auto;
+						margin-right: auto;
 						.schedulename{
 							display: inline-block;
 							width: 150px;
 							margin-top: 0px;
 							font-family: $OpenSans;
 							&:hover{
-								background:#3B7A8F;
+								background:#6BACC2;
 								color: white;
 								transform: scale(1.1,1.1);
 								position: relative;
