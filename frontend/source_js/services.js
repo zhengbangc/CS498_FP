@@ -101,6 +101,9 @@ mp4Services.factory('Users', function($http, $window) {
         },
         updateUser: function(username, useremail, userpass){
             var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
+            console.log('username: ' + username);
+            console.log('useremail: ' + useremail);
+            console.log('userpass: ' + userpass);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/user/' + tokenObject.id,
