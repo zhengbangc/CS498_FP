@@ -1,0 +1,454 @@
+var mp4Controllers = angular.module('mp4Controllers', []);
+
+mp4Controllers.controller('HomeController', ['$scope' , '$window', 'Users', 'Login', function($scope, $window, Users, Login) {
+    if(Users.isAuthed() == true)
+        $window.location.href = '#/myschedules';
+
+    $scope.open_body = function(){
+      $('.body_container').addClass('open');
+      $('.home_container button').addClass('open');
+    }
+    $scope.open_loginForm = function(){
+       $('.login_Form').toggleClass('extended');
+    }
+    $scope.close_loginForm = function(){
+      $('.login_Form').toggleClass('extended');
+    }
+    $scope.open_signupForm = function(){
+      $('.signup_Form').toggleClass('extended');
+    }
+    $scope.close_signupForm = function(){
+      $('.signup_Form').toggleClass('extended'); 
+    }
+
+    $scope.signup = function(){
+       Users.post($scope.signup_name, $scope.signup_email, $scope.signup_password)
+            .then(function(response){
+                  // console.log(response);
+                  if(response.status == 500)
+                    $scope.signup_response = 'Email already exists in the data base';
+                  else{
+                    $scope.signup_response = response.data.message;
+                    $window.sessionStorage['jwtToken'] = response.data.data.token;
+                    setTimeout(function(){
+                      $window.location.href = '#/myschedules';
+                    },1000);
+                  }
+                  $scope.signup_name = "";
+                  $scope.signup_email = "";
+                  $scope.signup_password = "";
+                  $('#signup_response').addClass('responded');
+                  $('.signup_Form').toggleClass('extended')
+                  setTimeout(function(){
+                    $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
+                  },5000);
+            })
+    }
+
+    $scope.login = function(){
+      Login.post($scope.login_email, $scope.login_password)
+           .then(function(response){
+            console.log(response);
+                if(response.status == 401){
+                  $scope.signup_response = 'Incorrect email and password combination';
+                  $('#signup_response').addClass('responded');
+                  setTimeout(function(){
+                    $('#signup_response').removeClass('responded'); //change large-8 to large-12 or vice versa
+                  },5000);
+                }
+                else{
+                  $scope.signup_response = 'Login successful!';
+                  $('#signup_response').addClass('responded');
+                  $window.sessionStorage['jwtToken'] = response.data.token;
+                  $window.sessionStorage['userpw'] = $scope.login_password;
+                  Users.get().then(function(response){
+                    console.log(response.data);
+                  });
+                  setTimeout(function(){
+                    $window.location.href = '#/myschedules';
+                  },1000);
+                }
+                
+           })
+    }
+
+
+}]);
+
+
+
+mp4Controllers.controller('MySchedulesController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
+  if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+  else {
+    Users.get().then(function(response){
+      if(response.status == 200){
+        $scope.user = response.data.data;
+      }
+      else
+        $window.location.href = '#/home';
+    });
+  }
+
+  // Need to get all schedules that have "user":[this user] --- assuming we can query with "?where={id:user.id}" in http requests in services.js
+  $scope.semesters = [];
+  $scope.schedules = [];
+  Users.get().then(function(response){
+      var schedules = response.data.data.schedules;
+      schedules.forEach(function(element){
+          $scope.schedules.push({'id':element.id, 'name': element.name, 'semester': element.term});
+          if($scope.semesters.indexOf(element.term) == -1)
+            $scope.semesters.push(element.term);
+      })
+  })
+
+  $scope.logout = function(){
+    $window.sessionStorage.removeItem('jwtToken');
+    $window.sessionStorage.removeItem('userpw');
+    $window.location.href = '#/home';
+  }
+}]);
+
+mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Users', function($scope, $http, $window,Users){
+    if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+    else {
+      Users.get().then(function(response){
+        if(response.status == 200)
+          $scope.user = response.data.data;
+        else
+          $window.location.href = '#/home';
+      });
+    }
+
+    $scope.updateUser = function (){
+      //TODO: get the current user and get the schedule array!
+        Users.get().then(function(response){
+          var cur_user = response.data.data;
+          console.log("the schedule array in the user object is " + cur_user.schedules.toString());
+          Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password)
+           .then(function(response){
+                if(response.status == 200){
+                Users.get().then(function(response){
+                  if(response.status == 200){
+                    console.log(response.data.data);
+                    $scope.user = response.data.data;
+                  }
+                  else
+                    $window.location.href = '#/home';
+
+                  $scope.edit_response = "Edit user successful";
+                  $('#edituser_response').toggleClass('responded');
+                  setTimeout(function(){
+                    $('#edituser_response').toggleClass('responded');
+                  }, 3000);
+                });
+            }else{
+                $scope.edit_response = "Edit user fail";
+                $('#edituser_response').toggleClass('responded');
+                setTimeout(function(){
+                  $('#edituser_response').toggleClass('responded');
+                }, 3000);
+            }
+          })
+
+        });
+
+    }
+
+    $scope.close = function(){
+      $window.location.href = '#/myschedules';
+    }
+
+
+    $scope.logout = function(){
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
+      $window.location.href = '#/home';
+    }
+}]);
+
+
+
+
+
+mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Schedules', 'Users', '$window' , function($scope, $http, Schedules, Users, $window) {
+    //Check if there is an authenticated user
+    if(Users.isAuthed() == false)
+        $window.location.href = '#/home';
+    else {
+      Users.get().then(function(response){
+        if(response.status == 200)
+          $scope.user = response.data.data;
+        else
+          $window.location.href = '#/home';
+      });
+    }
+
+  $scope.created = false;
+  $scope.semester = 'Spring 2016';
+  $scope.createSchedule = function (){
+    Schedules.add($scope.schedule_name, $scope.semester)
+             .then(function(response){
+                console.log(response.status);
+                if(response.status == 500)
+                    $scope.createschedule_response = 'Create schedule failed';
+                else{
+                  $scope.createschedule_response = response.data.message;
+                  $scope.created = true;
+                  console.log(response.data.data);
+                }
+                $('#createschedule_response').toggleClass('responded');
+                setTimeout(function(){
+                  $('#createschedule_response').toggleClass('responded');
+                }, 5000);
+
+             });
+  }
+
+   $scope.logout = function(){
+      $window.sessionStorage.removeItem('jwtToken');
+      $window.sessionStorage.removeItem('userpw');
+      $window.location.href = '#/home';
+    }
+
+
+}]);
+
+
+
+mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+
+/*  Classes.getBySemester().success(function(data){
+    $scope.classes = data.data;
+  });
+*/
+  // Need to get all classes for the selected semester
+
+  $scope.schedule = { 'name': 'My First Schedule', 'id':666, 'preview': 'preview' };
+  $scope.autoSchedule = function(){
+
+  };
+
+}]);
+
+
+
+
+mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
+
+  $(document).foundation();
+
+  // Need to get all classes for the selected semester
+  //Classes.getByTerm("Spring 2016").success(function(data){
+  //  //$scope.classes = data.data;
+  //});
+  $scope.classes = {
+    'name': 'CS 101 - Hello World'
+  };
+
+  $scope.saveSchedule = function(){
+    console.log("schedule saving");
+    //for each thing in assignment, save
+    $scope.schedule.sections = [];
+    for (var i=0; i<appointments.length; i++){
+      $scope.schedule.sections.push(appointments[i]._id);
+    }
+    Schedules.put($scope.schedule);
+  }
+
+  idToCRN = new Array();
+  //ex: idToCRN['id6'] = CRN
+  CRNtoClicked = new Array();
+  // ex: CRNtoClicked['22222'] = 1;
+
+  $scope.section = { 
+    'id': 8, 
+    'crn': 88888,
+    'name':'CS 440 Artificial Intelligence', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
+    'class_location':'123 Sesame St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+    $scope.section2 = { 
+    'id': 9, 
+    'crn': 99999,
+    'name':'CS 357', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'class_location':'Elm St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+  $scope.schedule = { 'name': 'My First Schedule' };
+
+
+  // ********** CALENDAR STUFF ***************
+
+    var appointments = new Array();
+
+    var appointment1 = {
+        _id: 1,
+        id: "id1",
+        description: "System programming",
+        location: "1404 Siebel",
+        subject: "CS 241",
+        calendar: "Class 1",
+        start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
+        end: new Date(2016, 10, 23, 9, 50, 0),
+        resizable: false,
+        draggable: false,
+        readOnly: true
+    }
+    var appointment2 = {
+        _id: 2,
+        id: "id2",
+        description: "Computer Architecture",
+        location: "1404 Siebel",
+        subject: "CS 233",
+        calendar: "Class 2",
+        start: new Date(2016, 10, 24, 10, 0, 0),
+        end: new Date(2016, 10, 24, 10, 50, 0),
+        resizable: false,
+        draggable: false,
+        readOnly: true
+    }
+    appointments.push(appointment1);
+    appointments.push(appointment2);
+    idToCRN[appointment1.id] = 11111;
+    idToCRN[appointment2.id] = 11111;
+
+    var source =
+    {
+        dataType: "array",
+        dataFields: [
+            { name: 'id', type: 'string' },
+            { name: 'description', type: 'string' },
+            { name: 'location', type: 'string' },
+            { name: 'subject', type: 'string' },
+            { name: 'calendar', type: 'string' },
+            { name: 'start', type: 'date' },
+            { name: 'end', type: 'date' },
+            { name: 'recurrenceRule', type: 'string' },
+            { name: 'draggable', type: 'boolean' },
+            { name: 'resizable', type: 'boolean' },
+            { name: 'readOnly', type: 'boolean' }
+        ],
+        id: 'id',
+        localData: appointments
+    };
+    var adapter = new $.jqx.dataAdapter(source);
+    $("#scheduler").jqxScheduler({
+        date: new $.jqx.date(2016, 11, 23),
+        width: '100vw',
+        height: '70vh',
+        source: adapter,
+        view: 'weekView',
+        showLegend: false,  //bottom with colored squares
+        toolbarHeight: 0,
+        enableHover: false,
+        timeZone: 'Central Standard Time',
+        editDialogDateTimeFormatString: "MM/dd/yyyy hh:mm tt",
+        ready: function () {
+
+            // On clicking twice, delete a class
+            $('#scheduler').on('appointmentClick', function (event) { 
+              var args = event.args; 
+              var appointment = args.appointment;
+
+              var CRN = idToCRN[appointment.id];
+              console.log(appointment);
+              console.log("appointment CRN = " + CRN);
+              console.log("appointment id = " + appointment.id);
+
+              // On one click, make background less opaque
+              if (CRNtoClicked[CRN.toString()] !== 1){
+                // apply to all sections that have the same crn
+                // compare all the hashtable[ids] and check if this is their CRN
+                for (var i = 0; i < appointments.length; i++){
+                  if (idToCRN[appointments[i].id] === CRN){
+                    console.log("first click");
+                    CRNtoClicked[CRN.toString()] = 1;
+                  }
+                }
+              }
+              // after the second click, make event disappear
+              else {
+                // apply to all sections that are linked
+                for (var i = 0; i < appointments.length; i++){
+                  if (idToCRN[appointments[i].id] === CRN){
+                    console.log("second click, should delete");
+                    $('#scheduler').jqxScheduler('deleteAppointment', appointments[i].id);
+                  }
+                }
+              }
+            });
+
+            $('#scheduler').on('appointmentAdd', function (event) { var args = event.args; var appointment = args.appointment; console.log(appointment); });
+            $scope.addSection = function(sec){
+              // ADD for loop: for days that this section repeats:
+              var newappointment = {
+                id: 'id' + sec.id.toString(), //id for calendar
+                description: sec.name,  // name of the class ("Artificial Intelligence")
+                location: sec.class_location,
+                subject: sec.name,  // e.g. "CS440"
+                start: sec.class_times[0], //(year, month, day, hour, minute, second)
+                end: sec.class_times[1],
+                calendar: "Class 3",
+                resizable: false,
+                draggable: false,
+                readOnly: true
+              };
+              idToCRN[newappointment.id] = sec.crn; // map id to a CRN
+              appointments.push(newappointment);
+              $('#scheduler').jqxScheduler('addAppointment', newappointment);
+              console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
+            };
+
+        },
+        resources:
+        {
+            colorScheme: "scheme05",
+            dataField: "calendar",
+            source:  new $.jqx.dataAdapter(source)
+        },
+        appointmentDataFields:
+        {
+            from: "start",
+            to: "end",
+            id: "id",
+            description: "description",
+            location: "location",
+            subject: "subject",
+            resourceId: "calendar",
+            resizable: "resizable",
+            draggable: "draggable",
+            readOnly: "readOnly"
+        },
+        views:
+        [
+          { type: "weekView", showWeekends: false, timeRuler: { scaleStartHour: 8, scaleEndHour: 21 } }
+        ]
+    });
+
+            // Test adding section to calendar
+            $scope.addSection($scope.section);
+            $scope.addSection($scope.section2);
+
+    // **** end calendar view
+
+}]);
+
+
+
+

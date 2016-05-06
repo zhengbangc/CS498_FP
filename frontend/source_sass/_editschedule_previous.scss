@@ -1,0 +1,25 @@
+.addclass{
+	position: relative;
+	background: $main-theme-lighter3;
+	min-height: 600px;
+	padding: 10px;
+}
+
+.calendar{
+	background: $main-theme-darker1;
+	min-height: 600px;
+	padding: 10px;
+}
+
+.close-menu{
+	position: absolute;
+	top: 0;
+	right: 0;
+
+	i {
+		color: $main-theme-darker1;
+		&:hover {
+			color: main-theme-darker3;
+		}
+	}
+}

@@ -8,17 +8,31 @@ app.config(['$routeProvider', function($routeProvider) {
   }).
   when('/createschedule', {
     templateUrl: 'partials/createschedule.html',
-    controller: 'CreateController'
+    controller: 'CreateScheduleController'
   }).
   when('/myschedules', {
     templateUrl: 'partials/myschedules.html',
     controller: 'MySchedulesController'
   }).
-  when('/scheduledetail', {
-    templateUrl: 'partials/scheduledetail.html',
-    controller: 'ScheduleDetailController'
+  when('/schedule/:_id', {
+    templateUrl: 'partials/editschedule.html',
+    controller: 'EditScheduleController'
+  }).
+  when('/edituser', {
+    templateUrl: 'partials/edituser.html',
+    controller: 'EditUserController'
+  }).
+  when('/autoschedule', {
+    templateUrl: 'partials/autoschedule.html',
+    controller: 'AutoScheduleController'
   }).
   otherwise({
     redirectTo: '/home'
   });
 }]);
+
+app.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+]);

@@ -1,27 +1,18 @@
-<div ng-controller='MySchedulesController'>
+<div ng-controller='MySchedulesController' class="myschedules">
 
-	<div class="main row text-center">
-	 <h1>My Schedules</h1>
-		  <div class="padded row" ng-repeat="semester in semesters">
-	          <div class="small-12 columns">
-
-	          	<h3>{{ semester }}</h3>
-	          	<ul class="grid" ng-repeat="schedule in schedules | filter:semester">
-	          		<a ng-href="#/schedule/{{schedule.id}}">
-	          			<li>
-	          				{{ schedule.name }}
-	          			</li>
-	          		</a>
-
-	          	</ul>
-
-	          </div>
-	      </div>
-
-	    {{displayText}}
-
+	<div class="main">
+	 <h1 class="text-center">My Schedules</h1>
+     <p class="text-center">Here are the schedules you've created</p>
+	    <div class="container">
+          <div class="semesterRow" ng-repeat="semester in semesters">
+              	<h3>{{ semester }}</h3>
+          		<div>
+                    <a class="schedulename text-center" ng-repeat="schedule in schedules | filter:semester" ng-href="#/schedule/{{schedule.id}}">{{ schedule.name }}
+              		</a>
+                </div>
+          </div>
+        </div>
 	</div>
-
 
 
 

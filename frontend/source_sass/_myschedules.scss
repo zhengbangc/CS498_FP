@@ -1,88 +1,77 @@
-// Navigation bar
-nav {
-	z-index: 999;
-	width: 100%;
-	height: $nav-height;
-	margin: 0px;
-	margin-bottom: 40px;
-	background: $main-theme-color;
-	position: fixed;
-	top: 0;
-
-	.button{
-		background-color: $main-theme-color;
-		&:hover, &:active, &:focus {
-			background-color: $main-theme-darker2;
+.myschedules{
+	.main{
+		/*margin-top: $nav-height;	// NECESSARY: avoid overlap with nav bar*/
+		padding-top: 40px + $nav-height;	// want some amount of space between bottom of nav bar and top of real content
+		.container{
+			width: 100vw;
+			.semesterRow{
+				height: 100px;
+				width: 80%;
+				padding: 0 0 0 0;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+				margin-top: 10px;
+				&:hover{
+					width:85%;
+					@include transition(all 0.3s ease-in-out);
+				}
+				@include transition(all 0.3s ease-in-out);
+					&:nth-child(1){
+						background: $main-theme-lighter3;
+					}
+					&:nth-child(2){
+						background: $main-theme-lighter1;
+					}
+					&:nth-child(3){
+						background: $main-theme-lighter3;
+					}
+					&:nth-child(4){
+						background: $main-theme-lighter1;
+					}
+					&:nth-child(5){
+						background: $main-theme-lighter3;
+					}
+					&:nth-child(6){
+						background: $main-theme-lighter1;
+					}
+					h3{
+						position: absolute;
+						display: inline-block;
+						line-height: 100px;
+						font-size: 20px;
+						width: 200px;
+						padding-left: 25px;
+						padding-right: 25px;
+					}
+					&>div{
+						position: absolute;
+						width: 70%;
+						left: 0;
+						right: 0;
+						margin-left: auto;
+						margin-right: auto;
+						.schedulename{
+							display: inline-block;
+							min-width: 150px;
+							margin-top: 0px;
+							padding-left: 20px;
+							padding-right: 20px;
+							font-family: $OpenSans;
+							&:hover{
+								background: $main-theme-darker2;
+								color: white;
+								transform: scale(1.1,1.1);
+								position: relative;
+								z-index: 4;
+							}
+							color: black;
+							line-height: 100px;
+							height: 100px;
+						}
+					}
+			}
 		}
-	}
 
-	/* Dropdown menu */
-	.dropdown {
-		position: absolute;
-		right: 0;
-	    display: inline-block;
-
-	    &:hover .dropdown-content {	//display options upon hover
-	    	display: block;
-	    }
-	}
-
-	.dropdown-content {
-		margin: 0px;
-	    display: none;
-	    position: absolute;
-	    top: $nav-height;
-	    background-color: #f9f9f9;
-	    min-width: 160px;
-	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-
-	    a {
-	    	color: black;
-		    padding: 12px 16px;
-		    text-decoration: none;
-		    display: block;
-
-		    &:hover {
-		    	background-color: #f1f1f1;
-		    }
-	    }
-	}
-
-}
-
-// Display schedules as a grid list
-ul.grid{
-
-	list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: inline;
-
-	li {
-		color: #000000;
-		display: inline-block;
-		width: $schedule-box-size;
-		height: $schedule-box-size;
-		border: 2px solid $main-theme-lighter3;
-
-		&:hover{
-			border: 2px solid $main-theme-darker1;
-		}
-	}	
-
-}
-
-.main{
-	margin-top: $nav-height;	//avoid overlap with nav bar
-	padding-top: 10px;			//want some space between bottom of nav bar and top of real content
-}
-
-.padded{
-	padding: 30px 0px;
-}
-
-.invisible-small{
-	@include breakpoint(small only) { //hide this on small screens
-		display: none;
 	}
 }
