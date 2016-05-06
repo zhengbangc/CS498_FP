@@ -1,19 +1,12 @@
-import requests
-import json
-import random
-import string
-
-def add(name, description):
-	payload = {'name': name, 'description': description}
-	print payload
-	r = requests.post('http://scheduler.intense.io/api/class', data=payload)
-	print(r.json())
+import os
+import sys
+import subprocess
 
 def main():
-	for i in range(100):
-		name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(7))
-		description = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(64))
-		add(name, description)
+	with open('subjects.txt', 'r') as f:
+		for subject in f:
+			p = subprocess.call('node queryCourseExplorer.js 2016 ' + subject, stdout=sys.stdout.fileno(), stderr=sys.stdout.fileno(), shell=True)
+			print('Process exited with code {}'.format(p))
 
 if __name__ == '__main__':
 	main()
