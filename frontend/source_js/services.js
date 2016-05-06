@@ -11,10 +11,6 @@ mp4Services.factory('Schedules', function($window, $http){
         get: function(scheduleID){
             return $http.get('http://scheduler.intense.io/api/schedules/'+scheduleID);
         },
-        getByUser: function(userID, token){
-            var where = '?where={ \"user\": \"' + userID.toString() + '\"}';    //or whatever
-            return $http.get(baseUrl + where);
-        },
         add: function(schedulename, semester){
             var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
             var promise = $http({
@@ -149,7 +145,7 @@ mp4Services.factory('Classes', function($window, $http){
             return $http.get('http://scheduler.intense.io/api/class/'+classID);
         },
         getByTerm: function(term){
-            var where = '?term=\"' + term.toString() + '\"}';
+            var where = '?term=' + term.toString();
             return $http.get('http://scheduler.intense.io/api/class' + where);
         },
     }

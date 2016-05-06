@@ -5,8 +5,19 @@
 	height: 100vh;
 	weight: 100vw;
 	overflow: hidden;
-	background: url("../data/images/follinger.jpg") no-repeat fixed /*linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%)*/;
-	background-size: cover;
+	//background: url("../data/images/follinger.jpg") no-repeat fixed /*linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%)*/;
+	//background-size: cover;
+	#bg-img {
+	    position: absolute;
+	    left: 0;
+	    top: 0;
+	    width: 100%;
+	    height: auto;
+	    opacity: 0.6;
+	    -webkit-filter: grayscale(100%);
+	    filter: grayscale(100%);
+	}
+
 	.home_container{
 		&>button{
 			position: absolute;
