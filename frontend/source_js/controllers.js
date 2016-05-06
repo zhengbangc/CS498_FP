@@ -234,7 +234,6 @@ mp4Controllers.controller('EditScheduleController',
   function($scope, $http, Schedules, Classes, Users, Sections, $window, $routeParams) {
 
     $scope.sections = [];
-
     $(document).foundation();
     if(Users.isAuthed() == false)
         $window.location.href = '#/home';
@@ -318,95 +317,15 @@ mp4Controllers.controller('EditScheduleController',
 
   $scope.sectionsForCalendar = [];
   $scope.addSections = function (){
-      // $scope.selectedSections.forEach(function(element){
-      //       console.log(element.section_times);
-      //       element.section_times.forEach(function(element){
-      //           console.log(element);
-      //           var day = element[0] +20;
-      //           var starthour = element[1]/60 | 0;
-      //           var startminute = element[1]%60;
-      //           var endhour = element[2]/60 | 0;
-      //           var endminute = element[2]%60;
-      //           $scope.sectionsForCalendar.push({
-      //               'id': element.id,
-      //               'crn': element.crn,
-      //               'name': element.name,
-      //               'class_location': element.section_location,
-      //               'section_code': element.section_code,
-      //               'instructor': element.instructor,
-      //               'credit_hours': element.credit_hours,
-      //               'section_type': element.section_type
-      //               'class_times': [ ['M','W','F'], new Date(2016, 10, day)
-      //           })
-      //       })  
-      // })
-      // console.log($scope.sectionsForCalendar);
       $scope.selectedSections.forEach(function(element){
-        
+          Classes.get(element.class).then(function(response){
+            console.log(response.data.data.name);
+            $scope.addSection(element, response.data.data.name);
+          })
       })
   }
 
-  $scope.section = { 
-    'id': 8, 
-    'crn': '88888',
-    'name':'CS 440 Artificial Intelligence', 
-    'term': 'Fall 2016',
-    'section_code': 'ADJ',
-    'instructor': 'Ur Mom',
-    'credit_hours': 3,
-    'section_type': 'Lab',
-    'class_times': [ [1, 600, 660], [3,600,660] ], 
-    'class_location':'123 Sesame St',
-    'restrictions': 'Pre-req: CS 225'
-  };
-    $scope.section2 = { 
-    'id': 9, 
-    'crn': '99999',
-    'name':'CS 357', 
-    'term': 'Fall 2016',
-    'section_code': 'ADJ',
-    'instructor': 'Ur Mom',
-    'credit_hours': 3,
-    'section_type': 'Lab',
-    'class_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
-    'class_location':'Elm St',
-    'restrictions': 'Pre-req: CS 225'
-  };
-
-
   // ********** CALENDAR STUFF ***************
-
-    var appointments = new Array();
-
-/*
-    var appointment1 = {
-        id: "id1",
-        description: "24100",
-        location: "1404 Siebel",
-        subject: "CS 241 - System Programming",
-        calendar: "Class 1",
-        start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
-        end: new Date(2016, 10, 23, 9, 50, 0),
-        resizable: false,
-        draggable: false,
-        readOnly: true
-    }
-    var appointment2 = {
-        id: "id2",
-        description: "23300",
-        location: "1404 Siebel",
-        subject: "CS 233 - Computer Architecture",
-        calendar: "Class 2",
-        start: new Date(2016, 10, 24, 10, 0, 0),
-        end: new Date(2016, 10, 24, 10, 50, 0),
-        resizable: false,
-        draggable: false,
-        readOnly: true,
-        crn: '66666666'
-    }
-    appointments.push(appointment1);
-    appointments.push(appointment2);
-*/
 
     var source =
     {
@@ -479,9 +398,9 @@ mp4Controllers.controller('EditScheduleController',
               }
             });
 
-            $scope.addSection = function(sec){
+            $scope.addSection = function(sec, secname){
 
-              var times = sec.class_times;
+              var times = sec.section_times;
               // for each day that this section repeats (e.g. M,W,F,....)
               for (var i=0; i<times.length; i++){
 
@@ -494,12 +413,12 @@ mp4Controllers.controller('EditScheduleController',
                 var endTime = times[i][2];
                 var endHours = (endTime / 60) | 0;
                 var endMinutes = (endTime % 60) | 0;
-
+                console.log(secname);
                 var newappointment = {
                   id: 'id' + sec.id.toString(), //id for calendar
                   description: sec.crn.toString(),  // IS THE CRN!!!!!!!!!!!
-                  location: sec.class_location,
-                  subject: sec.name,  // e.g. "CS440"
+                  location: sec.section_location,
+                  subject: secname,  // e.g. "CS440"
                   start: new Date(2016, 10, 20+day, startHours, startMinutes, 0), //(year, month, day, hour, minute, second)
                   end: new Date(2016, 10, 20+day, endHours, endMinutes, 0),
                   calendar: "Class 3",
@@ -540,7 +459,6 @@ mp4Controllers.controller('EditScheduleController',
         ]
     });
 
-    $scope.addSection($scope.section);
     // **** end calendar view
 
 }]);
