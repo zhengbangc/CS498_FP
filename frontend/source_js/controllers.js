@@ -215,8 +215,6 @@ mp4Controllers.controller('CreateScheduleController', ['$scope', '$http', 'Sched
 
 }]);
 
-
-
 mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
 
 /*  Classes.getBySemester().success(function(data){
@@ -233,9 +231,11 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
 }]);
 
 
-
-
 mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules','Classes','Users','$window','$routeParams', function($scope, $http, Schedules, Classes,Users, $window, $routeParams) {
+
+    //get all sections from this schedule
+
+
     $(document).foundation();
     if(Users.isAuthed() == false)
         $window.location.href = '#/home';
@@ -260,26 +260,21 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
       console.log(response.data.data);
       $scope.schedule = response.data.data;
   }).then(function(){
-    Classes.getByTerm($scope.schedule.term).then(function(response){
-      // console.log(response.data.data);
-      $scope.classes = response.data.data;
-    })
-
-    $scope.selectClass = function(cur_class){
-      console.log(cur_class.id);
-      Classes.get(cur_class.id).then(function(response){
-          $scope.sections = response.data.data.Sections;
-          console.log(response.data.data.Sections);
-          $scope.days = ['No day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      Classes.getByTerm($scope.schedule.term).then(function(response){
+        // console.log(response.data.data);
+        $scope.classes = response.data.data;
       })
-    }
 
-    
+      $scope.selectClass = function(cur_class){
+        console.log(cur_class.id);
+        Classes.get(cur_class.id).then(function(response){
+            $scope.sections = response.data.data.Sections;
+            console.log(response.data.data.Sections);
+            $scope.days = ['No day', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        })
+      }
 
-
-
-  })
-
+    })
 
   $scope.saveSchedule = function(){
     console.log("schedule saving");
@@ -291,8 +286,6 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     Schedules.put($scope.schedule);
   }
 
-  idToCRN = new Array();
-  //ex: idToCRN['id6'] = CRN
   CRNtoClicked = new Array();
   // ex: CRNtoClicked['22222'] = 1;
 
@@ -353,12 +346,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         readOnly: true,
         crn: '66666666'
     }
-    
-    
+  
     appointments.push(appointment1);
     appointments.push(appointment2);
-    idToCRN[appointment1.id] = 11111;
-    idToCRN[appointment2.id] = 22222;
 
     var source =
     {
@@ -448,8 +438,6 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               };
               appointments.push(newappointment);
               $('#scheduler').jqxScheduler('addAppointment', newappointment);
-
-              idToCRN[newappointment.id] = sec.crn; // map id to a CRN
               console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
             };
 
