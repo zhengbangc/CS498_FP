@@ -1,33 +1,11 @@
-#addclass{
-	position: relative;
-	background: $main-theme-lighter3;
-	min-height: 600px;
-	padding: 10px;
-}
-
 #addClassModal{
 	background: rgba(255,255,255,0.95);
 	border: 1px solid $main-theme-lighter3;
-}
-
-.calendar{
-	background: $main-theme-darker1;
-	min-height: 600px;
-	padding: 10px;
-}
-
-.close-menu{
-	position: absolute;
-	top: 0;
-	right: 0;
-
-	i {
-		color: $main-theme-darker1;
-		&:hover {
-			color: main-theme-darker3;
-		}
+	&:focus{
+		outline: none;
 	}
 }
+
 
 .edit-schedule-container{
 	min-height: 100vh;

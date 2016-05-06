@@ -13,30 +13,25 @@
 
 <!-- Add Class Modal -->
 	<div class="reveal" id="addClassModal" data-reveal>
-
-	<h1>Add a Class</h1>
-
-	<!-- Search Bar -->
-	<input ng-model="query" type="text" placeholder="Search for a class"><br><br>
-
-	<!-- Search Results -->
-	<ul>
-		<div ng-repeat="class in classes | filter:query">
-			<li class="thumbnail">
-				<div class="outer">
-					<div class="inner">
-						<h4>{{class.name}}</h4>
+		<h1>Add a Class</h1>
+		<!-- Search Bar -->
+		<input ng-model="query" type="text" placeholder="Search for a class"><br><br>
+		<!-- Search Results -->
+		<ul>
+			<div ng-repeat="class in classes | filter:query">
+				<li class="thumbnail">
+					<div class="outer">
+						<div class="inner">
+							<h4>{{class.name}}</h4>
+						</div>
 					</div>
-				</div>
-			</li>
-		</div>
-	</ul>
-
-	<button class="button round" ng-click="addClass()">Add Class</button>
-
-	<button class="close-button" aria-label="Close modal" type="button" onclick="$('#addClassModal').foundation('close');">
-	<span aria-hidden="true">&times;</span>
-	</button>
+				</li>
+			</div>
+		</ul>
+		<button class="button round" ng-click="addClass()">Add Class</button>
+		<button class="close-button" aria-label="Close modal" type="button" onclick="$('#addClassModal').foundation('close');">
+		<span aria-hidden="true">&times;</span>
+		</button>
 	</div>
 
 
