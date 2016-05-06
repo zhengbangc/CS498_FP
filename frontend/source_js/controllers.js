@@ -197,6 +197,7 @@
           $scope.createschedule_response = response.data.message;
           $scope.created = true;
           console.log(response.data.data);
+          $scope.id = response.data.data.id;
         }
         $('#createschedule_response').toggleClass('responded');
         setTimeout(function(){
@@ -259,6 +260,7 @@
         Classes.getByTerm($scope.schedule.term).then(function(response){
           // console.log(response.data.data);
           $scope.classes = response.data.data;
+          console.log($scope.classes);
         }).then(function(response) {
           console.log('sections to add:' + sections);
           //for each section in $scope.schedule.sections, get the section info
