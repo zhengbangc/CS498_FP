@@ -305,7 +305,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         end: new Date(2016, 10, 23, 9, 50, 0),
         resizable: false,
         draggable: false,
-        readOnly: true,
+        readOnly: true
     }
     var appointment2 = {
         id: "id2",
@@ -320,6 +320,8 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         readOnly: true,
         crn: '66666666'
     }
+    
+    
     appointments.push(appointment1);
     appointments.push(appointment2);
     idToCRN[appointment1.id] = 11111;
@@ -362,18 +364,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             $('#scheduler').on('appointmentClick', function (event) { 
               var args = event.args; 
               var appointment = args.appointment;
-
-              console.log(appointment);
-
               appointments =  $("#scheduler").jqxScheduler('getAppointments');
 
-              console.log('args.appointment.id = ' + appointment.id);
-              console.log('args.appointment.originalData.id = ' + appointment.originalData.id);
-
-              // convert appointment id to CRN
-              //var CRN = idToCRN[appointment.id];
               var crn = appointment.description;
-              console.log(appointment);
               console.log("appointment CRN = " + appointment.description);
 
               // On one click, make background less opaque
