@@ -1,6 +1,6 @@
 <script src="./foundation6_lib/js/foundation.min.js"></script>
 
-<div class="edit-schedule-container" ng-controller='EditScheduleController'>
+<div class="edit-schedule-container">
 
 
 <!--Header-->
@@ -10,7 +10,7 @@
         <a class="button" ng-click="saveSchedule()">Save Schedule</a>
 	</div>
 	<div class="row text-center">
-		<span>CRNs: </span><span ng-repeat="section in schedule.sections">{{ section.crn }} </span>
+		<span>CRNs: </span><span ng-repeat="someCRN in activeCRNs">{{ someCRN }} </span>
 	</div>
 
 
