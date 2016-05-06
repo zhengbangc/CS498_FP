@@ -1,9 +1,113 @@
 #addClassModal{
 	background: rgba(255,255,255,0.95);
 	border: 1px solid $main-theme-lighter3;
+	width: 80vw;
+	height: 80vh;
 	&:focus{
 		outline: none;
 	}
+	input {
+		width: 80%;
+		margin-right: auto;
+		margin-left: auto;
+		border-radius: 5px;
+	}
+	.classes_container{
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+		height: 60%;
+		width: 100%;
+		margin-top: -20px;
+		.allClasses{
+			background-color: white;
+			position: absolute;
+			left: 20px;
+			display: inline-block;
+			list-style: none;
+			height: 100%;
+			width: 60%;
+			padding-right: 0px;
+			margin-left: 0px;
+			overflow: scroll;
+			/*border: 1px solid #aeaeae;*/
+			border-radius: 5px;
+			-webkit-box-shadow: 0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			-moz-box-shadow:    0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			box-shadow:         0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			li{
+				padding-left: 10px;
+				font-family: $OpenSans;
+				font-size: 20px;
+				width: 100%;
+				margin-top: 5px;
+				margin-bottom: 5px;
+				cursor: pointer;
+				&:hover{
+					background:#6BACC2;
+					color: white;
+					position: relative;
+					z-index: 4;
+				}
+			}
+		}
+		.classSections{
+			background-color: white;
+			position: absolute;
+			right: 20px;
+			left: auto;
+			display: inline-block;
+			list-style: none;
+			height: 100%;
+			width: 30%;
+			padding-right: 0px;
+			margin-left: 0px;
+			overflow: scroll;
+			-webkit-box-shadow: 0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			-moz-box-shadow:    0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			box-shadow:         0px 3px 9px 2px rgba(50, 50, 50, 0.72);
+			border-radius: 5px;
+			li{
+				font-family: $OpenSans;
+				font-size: 20px;
+				border-bottom: 5px;
+				cursor: pointer;
+				&:hover{
+					background:#6BACC2;
+					color: white;
+					position: relative;
+					z-index: 4;
+					strong{
+						color: white;
+					}
+				}
+				strong{
+					display: block;
+					font-size: 16px;
+					color: #54A8C4;
+				}
+				span{
+					display: block;
+					font-size: 14px;
+				}
+			}
+		}
+	}
+	.button.round{
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		width: 40%;
+		margin-top: 20px;
+		
+	}
+
+	button{
+		&:focus{
+			outline:none;
+		}
+	}
+
 }
 
 
