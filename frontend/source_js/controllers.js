@@ -260,7 +260,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
   $scope.section = { 
     'id': 8, 
-    'crn': 22222,
+    'crn': 88888,
     'name':'CS 440 Artificial Intelligence', 
     'term': 'Fall 2016',
     'section_code': 'ADJ',
@@ -274,7 +274,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
   };
     $scope.section2 = { 
     'id': 9, 
-    'crn': 22222,
+    'crn': 99999,
     'name':'CS 357', 
     'term': 'Fall 2016',
     'section_code': 'ADJ',
@@ -305,6 +305,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointment1 = {
         _id: 1,
         id: "id1",
+        CRN: 11111,
         description: "System programming",
         location: "1404 Siebel",
         subject: "CS 241",
@@ -319,6 +320,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointment2 = {
         _id: 2,
         id: "id2",
+        CRN: 11111,
         description: "Computer Architecture",
         location: "1404 Siebel",
         subject: "CS 233",
@@ -333,6 +335,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointment3 = {
         _id: 3,
         id: "id3",
+        CRN: 33333,
         description: "Numerical Methods",
         location: "1404 Siebel",
         subject: "CS 357",
@@ -346,6 +349,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
     var appointment4 = {
         _id: 4,
+        CRN: 44444,
         id: 'id4',
         description: "The Art and Science of Web Programming",
         location: "1404 Siebel",
@@ -369,6 +373,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         dataFields: [
             { name: '_id', type: 'int' },
             { name: 'id', type: 'string' },
+            { name: 'CRN', type: 'int' },
             { name: 'description', type: 'string' },
             { name: 'location', type: 'string' },
             { name: 'subject', type: 'string' },
@@ -429,16 +434,30 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             // On clicking twice, delete a class
             $('#scheduler').on('appointmentClick', function (event) { 
               var args = event.args; 
-              var appointment = args.appointment; 
+              var appointment = args.appointment;
+              console.log("appointment CRN = " + appointment.CRN);
               // on one click, make background less opaque
               if (!appointment.clicked){
-                console.log("first click");
-                appointment.clicked = 1;
+                // apply to all sections that are linked
+                for (var i = 0; i < appointments.length; i++){
+                  if (appointments[i].CRN === appointment.CRN){
+                    console.log("first click");
+                    appointments[i].clicked = 1;
+                  }
+                }
               }
               // after the second click, make event disappear
               else {
-                console.log("second click, should delete");
-                $('#scheduler').jqxScheduler('deleteAppointment', appointment.id);
+                // apply to all sections that are linked
+                var clickedCRN = appointment.CRN;
+
+                for (var i=0; i < appointments.length; i++){
+                  if (appointments[i].CRN === clickedCRN){
+                    console.log("second click, should delete");
+                    appointments[i].clicked = 1;
+                    $('#scheduler').jqxScheduler('deleteAppointment', appointments[i].id);
+                  }
+                }
               }
             });
 
@@ -453,6 +472,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               var newappointment = {
                 _id: sec.id,
                 id: 'id' + sec.id.toString(),
+                CRN: sec.crn,
                 description: sec.name,  // name of the class ("Artificial Intelligence")
                 location: sec.class_location,
                 subject: sec.name,  // e.g. "CS440"
