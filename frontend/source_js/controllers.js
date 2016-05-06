@@ -323,7 +323,7 @@ mp4Controllers.controller('EditScheduleController',
     'instructor': 'Ur Mom',
     'credit_hours': 3,
     'section_type': 'Lab',
-    'class_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'class_times': [ [1, 600, 660], [3,600,660] ],
     'class_location':'Elm St',
     'restrictions': 'Pre-req: CS 225'
   };
