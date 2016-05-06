@@ -87,9 +87,7 @@ function getError(err) {
 
   if(!err.errors) {
     msg += err.message;
-  }
-
-  else {
+  } else {
     for(var key in err.errors) {
       msg += err.errors[key].message + ' ';
     }
@@ -97,139 +95,13 @@ function getError(err) {
   return msg;
 }
 
-
-//Default route here
-var homeRoute = router.route('/');
-
-homeRoute.get(function(req, res) {
-  res.json({ message: 'Nothing here' });
-});
-
-
-//Class route
-var classesRoute = router.route('/class');
-
-classesRoute.get(function(req, res) {
-  Class.findAll({
-    where: {
-      term: req.query.term
-    },
-    attributes: [
-      'id',
-      'name'  
-    ]
-  }).then(function(classes) {
-    res.json({message: 'OK', data: classes});
-  }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
-  });
-});
-
-classesRoute.post(function(req, res) {
-  Class.create({
-    name: req.body.name,
-    required: '',
-    term: 'fa16',
-    description: req.body.description
-  },{ include: [{ model: Section, as: 'Sections' }]})
-  .then(function(obj) {
-    res.statusCode = 201;
-    return res.json({message: 'created', data: [obj]});
-  });
-});
-
-//Class:id route
-var classRoute = router.route('/class/:id');
-
-classRoute.get(function(req, res) {
-  Class.findById(req.params.id, {include: [{ model: Section, as: 'Sections'}]}).then(function(aClass) {
-    if(!aClass) {
-      res.status(404);
-      res.json({message: 'Class not found', data: [{id: req.params.id}]});
-    } else {
-      res.json({message: 'OK', data: aClass});
-    }
-  }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
-  });
-});
-
-//Section route
-var sectionRoute = router.route('/sections');
-
-sectionRoute.get(function(req, res) {
-  Section.findAll({
-    where: {
-      name: req.query.name
-    }
-  }).then(function(sections) {
-    res.json({message: 'OK', data: sections});
-  }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
-  });
-});
-
-sectionRoute.post(function(req, res) {
-  Section.create({
-      crn: req.body.crn,
-      name: req.body.name,
-      code: req.body.code,
-      hours: req.body.hours,
-      type: req.body.type,
-      time: req.body.time
-    })
-    .then(function(obj) {
-      res.statusCode = 201;
-      return res.json({message: 'created', data: [obj]});
-    });
-});
-
-//Section:id route
-var sectionRoute = router.route('/sections/:id');
-
-sectionRoute.get(function(req, res) {
-  Section.findById(req.params.id).then(function(section) {
-    if(!section) {
-      res.status(404);
-      res.json({message: 'Section not found', data: [{id: req.params.id}]});
-    } else {
-      res.json({message: 'OK', data: section});
-    }
-  }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
-  });
-});
-
-//User route
-var userRoute = router.route('/user/:id');
-userRoute.get(function(req, res) {
-  User.findOne({where: {id: req.params.id}, include: [{model: Schedule, as: 'Schedules', attributes: ['id', 'name', 'term']}]}).then(function(user) {
-    if(!user) {
-      res.status(404);
-      res.json({message: 'User not found', data: [{id: req.params.id}]});
-    } else {
-      var ret = {id: user.id, name: user.name, email: user.email, schedules: user.Schedules};
-      res.json({message: 'OK', data: ret});
-    }
-  }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
-  });
-});
-
 userRoute.put(authenticate, function(req, res) {
   if(req.user.id != req.params.id) {
-    res.status(403);
-    res.json({message: 'Forbidden', data: []});
+    return res.status(403).json({message: 'Forbidden', data: []});
   }
   User.findById(req.params.id).then(function(user) {
     if(!user) {
-      res.status(404);
-      res.json({message: 'User not found', data: [{id: req.params.id}]});
+      return res.status(404).json({message: 'User not found', data: [{id: req.params.id}]});
     } else {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
@@ -238,19 +110,18 @@ userRoute.put(authenticate, function(req, res) {
           bcrypt.hash(req.body.pass, salt, function(err, hash) {
             user.hash = hash;
             user.save().then(function() {
-              res.json({message: 'User updated', data: [{id: req.params.id}]});
+              return res.json({message: 'User updated', data: [{id: req.params.id}]});
             });
           });
         });
       } else {
         user.save().then(function() {
-          res.json({message: 'User updated', data: [{id: req.params.id}]});
+          return res.json({message: 'User updated', data: [{id: req.params.id}]});
         });
       }
     }
   }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
+    return res.status(500).json({message: getError(err), data: []});
   });
 });
 
@@ -297,7 +168,7 @@ function generateToken(req, res, next) {
   req.token = jwt.sign({
     id: req.user.id,
   }, jwt_secret, {
-    expiresIn: 120
+    expiresIn: 86400
   });
   return res.status(200).json({
     message: 'Successfully logged in.',
@@ -305,6 +176,119 @@ function generateToken(req, res, next) {
     token: req.token  
   });
 }
+
+//Default route here
+var homeRoute = router.route('/');
+
+homeRoute.get(function(req, res) {
+  return res.json({ message: 'Nothing here' });
+});
+
+
+//Class route
+var classesRoute = router.route('/class');
+
+classesRoute.get(function(req, res) {
+  Class.findAll({
+    where: {
+      term: req.query.term
+    },
+    attributes: [
+      'id',
+      'name'  
+    ]
+  }).then(function(classes) {
+    return res.json({message: 'OK', data: classes});
+  }).catch(function(err) {
+    return res.status(500).json({message: getError(err), data: []});
+  });
+});
+
+classesRoute.post(function(req, res) {
+  Class.create({
+    name: req.body.name,
+    required: '',
+    term: 'fa16',
+    description: req.body.description
+  },{ include: [{ model: Section, as: 'Sections' }]})
+  .then(function(obj) {
+    return res.status(201)..json({message: 'created', data: [obj]});
+  });
+});
+
+//Class:id route
+var classRoute = router.route('/class/:id');
+
+classRoute.get(function(req, res) {
+  Class.findById(req.params.id, {include: [{ model: Section, as: 'Sections'}]}).then(function(aClass) {
+    if(!aClass) {
+      return res.status(404).json({message: 'Class not found', data: [{id: req.params.id}]});
+    } else {
+      return res.status(500).json({message: 'OK', data: aClass});
+    }
+  }).catch(function(err) {
+    return res.status(500).json({message: getError(err), data: []});
+  });
+});
+
+//Section route
+var sectionRoute = router.route('/sections');
+
+sectionRoute.get(function(req, res) {
+  Section.findAll({
+    where: {
+      name: req.query.name
+    }
+  }).then(function(sections) {
+    return res.json({message: 'OK', data: sections});
+  }).catch(function(err) {
+    return res.status(500).json({message: getError(err), data: []});
+  });
+});
+
+sectionRoute.post(function(req, res) {
+  Section.create({
+      crn: req.body.crn,
+      name: req.body.name,
+      code: req.body.code,
+      hours: req.body.hours,
+      type: req.body.type,
+      time: req.body.time
+    })
+    .then(function(obj) {
+      return res.statusCode(201).json({message: 'created', data: [obj]});
+    });
+});
+
+//Section:id route
+var sectionRoute = router.route('/sections/:id');
+
+sectionRoute.get(function(req, res) {
+  Section.findById(req.params.id).then(function(section) {
+    if(!section) {
+      return res.status(404).json({message: 'Section not found', data: [{id: req.params.id}]});
+    } else {
+      return res.json({message: 'OK', data: section});
+    }
+  }).catch(function(err) {
+    return res.status(500).json({message: getError(err), data: []});
+  });
+});
+
+//User route
+var userRoute = router.route('/user/:id');
+userRoute.get(function(req, res) {
+  User.findOne({where: {id: req.params.id}, include: [{model: Schedule, as: 'Schedules', attributes: ['id', 'name', 'term']}]}).then(function(user) {
+    if(!user) {
+      return res.status(404).json({message: 'User not found', data: [{id: req.params.id}]});
+    } else {
+      var ret = {id: user.id, name: user.name, email: user.email, schedules: user.Schedules};
+      return res.json({message: 'OK', data: ret});
+    }
+  }).catch(function(err) {
+    return res.status(500).json({message: getError(err), data: []});
+  });
+});
 
 //Schedule route
 var schedulesRoute = router.route('/schedules');
@@ -316,28 +300,24 @@ schedulesRoute.get(function(req, res) {
       user: req.query.user
     }
   }).then(function(schedules) {
-    res.json({message: 'OK', data: schedules});
+    return res.json({message: 'OK', data: schedules});
   }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
+    return res.status(500).json({message: getError(err), data: []});
   });
 });
 
 schedulesRoute.post(authenticate, function(req, res) {
   if(!req.body.name || !req.body.term) {
-    res.status(500);
-    return res.json({message: 'Missing a parameter', data: []});
+    return res.status(500).json({message: 'Missing a parameter', data: []});
   }
   Schedule.create({
     name: req.body.name,
     user: req.user.id,
     term: req.body.term
   }).then(function(schedule) {
-    res.statusCode = 201;
-    return res.json({message: 'Schedule added to database', data: schedule});
+    return res.status(201).json({message: 'Schedule added to database', data: schedule});
   }).catch(function(err) {
-    res.status(500);
-    return res.json({message: getError(err), data: []});
+    return res.status(500).json({message: getError(err), data: []});
   });
 });
 
@@ -354,36 +334,30 @@ scheduleRoute.get(function(req, res) {
     ]
   }).then(function(schedule) {
     if(!schedule) {
-      res.status(404);
-      res.json({message: 'Schedule not found', data: [{id: req.params.id}]});
+      return res.status(404).json({message: 'Schedule not found', data: [{id: req.params.id}]});
     } else {
-      res.json({message: 'OK', data: schedule});
+      return res.json({message: 'OK', data: schedule});
     }
   }).catch(function(err) {
-    res.status(500);
-    res.json({message: getError(err), data: []});
+    return res.status(500).json({message: getError(err), data: []});
   });
 });
 
 scheduleRoute.put(authenticate, function(req, res) {
-  console.log(req.body);
   req.params.id = parseInt(req.params.id);
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
-      res.status(404);
-      return res.json({message: 'Schedule not found', data: []});
+      return res.status(404).json({message: 'Schedule not found', data: []});
     }
     if(req.user.id != schedule.user) {
-      console.log(req.user.id);
-      console.log(schedule.user);
-      res.status(403);
-      return res.json({message: 'Forbidden', data: []});
+      return res.status(403).json({message: 'Forbidden', data: []});
     }
-    console.log(typeof(req.body.sections));
-    if(typeof(req.body.sections) == 'string')
+    // Since frontend had so much trouble, do some parsing hacks
+    if(typeof(req.body.sections) == 'string') {
       req.body.sections = JSON.parse(req.body.sections);
-    else
+    } else {
       req.body.sections = req.body.sections.map(function(n) { return parseInt(n, 10);}) || schedule.getSections() || [];
+    }
     schedule.update({
       name: req.body.name || schedule.name,
       user: req.body.user || schedule.user,
@@ -395,25 +369,25 @@ scheduleRoute.put(authenticate, function(req, res) {
         return newSchedule.setSections(sections);
       });
     }).then(function(newSchedule) {
-      res.status(200);
-      res.json({message: 'Schedule updated', data: newSchedule});
+      return res.json({message: 'Schedule updated', data: newSchedule});
     }).catch(function(err) {
       console.log(err);
-      res.status(500);
-      res.json({message: getError(err), data: []});
+      return res.status(500).json({message: getError(err), data: []});
     });
   });
 });
 
+/*
+// Not using
 scheduleRoute.delete(authenticate, function(req, res) {
-  if(req.user.id != req.body.user) {
-    res.status(403);
-    res.json({message: 'Forbidden', data: []});
-  }
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
       res.status(404);
       res.json({message: 'Schedule not found', data: []});
+    }
+    if(req.user.id != schedule.user) {
+      res.status(403);
+      res.json({message: 'Forbidden', data: []});
     }
     schedule.destroy().then(function() {
       res.json({message: 'Schedule deleted', data: []});
@@ -503,6 +477,7 @@ function autoSchedule(courses) {
 
   return section_combos;
 }
+*/
 
 // Start the server
 app.listen(port);
