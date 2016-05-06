@@ -325,7 +325,37 @@ mp4Controllers.controller('EditScheduleController',
       })
   }
 
+  $scope.section = { 
+    'id': 8, 
+    'crn': '88888',
+    'name':'CS 440 Artificial Intelligence', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'section_type': 'Lab',
+    'section_times': [ [1, 600, 660], [3,600,660] ], 
+    'class_location':'123 Sesame St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+    $scope.section2 = { 
+    'id': 9, 
+    'crn': '99999',
+    'name':'CS 357', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'section_type': 'Lab',
+    'section_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'class_location':'Elm St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+
+
   // ********** CALENDAR STUFF ***************
+
+    var appointments = new Array();
 
     var source =
     {
@@ -459,6 +489,7 @@ mp4Controllers.controller('EditScheduleController',
         ]
     });
 
+    // $scope.addSection($scope.section);
     // **** end calendar view
 
 }]);
