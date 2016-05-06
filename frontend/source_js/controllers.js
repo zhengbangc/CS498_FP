@@ -222,7 +222,6 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
   });
 */
   // Need to get all classes for the selected semester
-
   $scope.schedule = { 'name': 'My First Schedule', 'id':666, 'preview': 'preview' };
   $scope.autoSchedule = function(){
 
@@ -230,11 +229,11 @@ mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedul
 
 }]);
 
+mp4Controllers.controller('EditScheduleController', 
+  ['$scope', '$http', 'Schedules','Classes', 'Users', 'Sections', '$window','$routeParams', 
+  function($scope, $http, Schedules, Classes, Users, Sections, $window, $routeParams) {
 
-mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedules','Classes','Users','$window','$routeParams', function($scope, $http, Schedules, Classes,Users, $window, $routeParams) {
-
-    //get all sections from this schedule
-
+    $scope.sections = [];
 
     $(document).foundation();
     if(Users.isAuthed() == false)
@@ -254,13 +253,26 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
       $window.location.href = '#/home';
     }
 
-
+    // GET ALL SECTIONS FROM SCHEDULE
+    // get all sections ids from this schedule
+    // for all sections: addSection(section), get the section's info
   $scope.classes = [];
   $scope.selectedSections = [];
   Schedules.get($routeParams._id).then(function(response){
       console.log(response.data.data);
       $scope.schedule = response.data.data;
+      console.log("scope.schedule = " + $scope.schedule);
+      console.log("scope.schedule = " + Object.keys($scope.schedule));
   }).then(function(){
+
+      var sections = $scope.schedule.sections; 
+      console.log('sections to add:' + sections);
+      //for each section in $scope.schedule.sections, get the section info
+      for(var i=0; i<sections.length; i++){
+          console.log('section retrieved: ' + response.data.data);
+          $scope.addSection(sections[i]);
+      }
+
       Classes.getByTerm($scope.schedule.term).then(function(response){
         // console.log(response.data.data);
         $scope.classes = response.data.data;
@@ -343,7 +355,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     'instructor': 'Ur Mom',
     'credit_hours': 3,
     'section_type': 'Lab',
-    'class_times': [ ['M','W','F'], new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
+    'class_times': [ [1, 600, 660], [3,600,660] ], 
     'class_location':'123 Sesame St',
     'restrictions': 'Pre-req: CS 225'
   };
@@ -366,6 +378,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
     var appointments = new Array();
 
+/*
     var appointment1 = {
         id: "id1",
         description: "24100",
@@ -391,9 +404,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         readOnly: true,
         crn: '66666666'
     }
-  
     appointments.push(appointment1);
     appointments.push(appointment2);
+*/
 
     var source =
     {
@@ -466,25 +479,40 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               }
             });
 
-            $('#scheduler').on('appointmentAdd', function (event) { var args = event.args; var appointment = args.appointment; console.log(appointment); });
             $scope.addSection = function(sec){
-              // ADD for loop: for days that this section repeats:
-              var newappointment = {
-                id: 'id' + sec.id.toString(), //id for calendar
-                description: sec.crn.toString(),  // IS THE CRN!!!!!!!!!!!
-                location: sec.class_location,
-                subject: sec.name,  // e.g. "CS440"
-                start: sec.class_times[1], //(year, month, day, hour, minute, second)
-                end: sec.class_times[2],
-                calendar: "Class 3",
-                resizable: false,
-                draggable: false,
-                readOnly: true,
-              };
-              appointments.push(newappointment);
-              $('#scheduler').jqxScheduler('addAppointment', newappointment);
-              console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
+
+              var times = sec.class_times;
+              // for each day that this section repeats (e.g. M,W,F,....)
+              for (var i=0; i<times.length; i++){
+
+                var day = times[i][0];  // 1 for monday, 2 for tuesday, etc......
+
+                var startTime = times[i][1];
+                var startHours = (startTime / 60) | 0;
+                var startMinutes = (startTime % 60) | 0;
+
+                var endTime = times[i][2];
+                var endHours = (endTime / 60) | 0;
+                var endMinutes = (endTime % 60) | 0;
+
+                var newappointment = {
+                  id: 'id' + sec.id.toString(), //id for calendar
+                  description: sec.crn.toString(),  // IS THE CRN!!!!!!!!!!!
+                  location: sec.class_location,
+                  subject: sec.name,  // e.g. "CS440"
+                  start: new Date(2016, 10, 20+day, startHours, startMinutes, 0), //(year, month, day, hour, minute, second)
+                  end: new Date(2016, 10, 20+day, endHours, endMinutes, 0),
+                  calendar: "Class 3",
+                  resizable: false,
+                  draggable: false,
+                  readOnly: true,
+                };
+
+                appointments.push(newappointment);
+                $('#scheduler').jqxScheduler('addAppointment', newappointment);
+                console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
             };
+          }
 
         },
         resources:
@@ -512,10 +540,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         ]
     });
 
-     // Test adding section to calendar
-      $scope.addSection($scope.section);
-      $scope.addSection($scope.section2);
-
+    $scope.addSection($scope.section);
     // **** end calendar view
 
 }]);
