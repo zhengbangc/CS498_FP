@@ -1,3 +1,5 @@
+.editUser{
+	padding-top: 40px + $nav-height;	// want some amount of space between bottom of nav bar and top of real content
 	#edituser_response{
 		&.responded{
 			opacity: 1;
@@ -14,3 +16,4 @@
 		opacity:0;
 		display: none;
 	}
+}
