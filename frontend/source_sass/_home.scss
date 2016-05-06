@@ -8,14 +8,16 @@
 	//background: url("../data/images/follinger.jpg") no-repeat fixed /*linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%)*/;
 	//background-size: cover;
 	#bg-img {
-	    position: absolute;
-	    left: 0;
-	    top: 0;
-	    width: 100%;
-	    height: auto;
-	    opacity: 0.6;
-	    -webkit-filter: grayscale(100%);
-	    filter: grayscale(100%);
+		position: fixed;
+		min-height: 100%;
+		min-width: 1024px;
+		width: 100%;
+		height: auto;
+		left: 0;
+		top: 0;
+		opacity: 0.6;
+		-webkit-filter: grayscale(100%);
+		filter: grayscale(100%);
 	}
 
 	.home_container{
