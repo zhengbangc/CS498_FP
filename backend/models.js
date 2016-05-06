@@ -132,6 +132,7 @@ Class.hasMany(Section, {as: 'Sections', foreignKey: 'class'});
 Section.belongsTo(Class, {as: 'Class', foreignKey: 'class'});
 
 Section.belongsToMany(Schedule, {through: 'SectionsInSchedules'});
+Schedule.belongsToMany(Section, {through: 'SectionsInSchedules'});
 Class.belongsToMany(Schedule, {through: 'ClassesInSchedules'});
 
 /*
