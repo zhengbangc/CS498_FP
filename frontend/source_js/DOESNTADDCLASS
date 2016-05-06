@@ -264,27 +264,29 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
   $scope.section = { 
     'id': 8, 
-    'crn': '88888',
+    'crn': 88888,
     'name':'CS 440 Artificial Intelligence', 
     'term': 'Fall 2016',
     'section_code': 'ADJ',
     'instructor': 'Ur Mom',
     'credit_hours': 3,
-    'section_type': 'Lab',
-    'class_times': [ ['M','W','F'], new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 23, 13, 0, 0), new Date(2016, 10, 23, 13, 50, 0)], 
     'class_location':'123 Sesame St',
     'restrictions': 'Pre-req: CS 225'
   };
     $scope.section2 = { 
     'id': 9, 
-    'crn': '99999',
+    'crn': 99999,
     'name':'CS 357', 
     'term': 'Fall 2016',
     'section_code': 'ADJ',
     'instructor': 'Ur Mom',
     'credit_hours': 3,
-    'section_type': 'Lab',
-    'class_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'hours': 3, 
+    'section_type': 3,
+    'class_times': [new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
     'class_location':'Elm St',
     'restrictions': 'Pre-req: CS 225'
   };
@@ -296,34 +298,35 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointments = new Array();
 
     var appointment1 = {
+        _id: 1,
         id: "id1",
-        description: "24100",
+        description: "System programming",
         location: "1404 Siebel",
-        subject: "CS 241 - System Programming",
+        subject: "CS 241",
         calendar: "Class 1",
         start: new Date(2016, 10, 23, 9, 0, 0), //(year, month, day, hour, minute, second)
         end: new Date(2016, 10, 23, 9, 50, 0),
         resizable: false,
         draggable: false,
-        readOnly: true,
+        readOnly: true
     }
     var appointment2 = {
+        _id: 2,
         id: "id2",
-        description: "23300",
+        description: "Computer Architecture",
         location: "1404 Siebel",
-        subject: "CS 233 - Computer Architecture",
+        subject: "CS 233",
         calendar: "Class 2",
         start: new Date(2016, 10, 24, 10, 0, 0),
         end: new Date(2016, 10, 24, 10, 50, 0),
         resizable: false,
         draggable: false,
-        readOnly: true,
-        crn: '66666666'
+        readOnly: true
     }
     appointments.push(appointment1);
     appointments.push(appointment2);
     idToCRN[appointment1.id] = 11111;
-    idToCRN[appointment2.id] = 22222;
+    idToCRN[appointment2.id] = 11111;
 
     var source =
     {
@@ -339,7 +342,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             { name: 'recurrenceRule', type: 'string' },
             { name: 'draggable', type: 'boolean' },
             { name: 'resizable', type: 'boolean' },
-            { name: 'readOnly', type: 'boolean' },
+            { name: 'readOnly', type: 'boolean' }
         ],
         id: 'id',
         localData: appointments
@@ -363,32 +366,19 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               var args = event.args; 
               var appointment = args.appointment;
 
+              var CRN = idToCRN[appointment.id];
               console.log(appointment);
-
-              appointments =  $("#scheduler").jqxScheduler('getAppointments');
-
-              console.log('args.appointment.id = ' + appointment.id);
-              console.log('args.appointment.originalData.id = ' + appointment.originalData.id);
-
-              // convert appointment id to CRN
-              //var CRN = idToCRN[appointment.id];
-              var crn = appointment.description;
-              console.log(appointment);
-              console.log("appointment CRN = " + appointment.description);
+              console.log("appointment CRN = " + CRN);
+              console.log("appointment id = " + appointment.id);
 
               // On one click, make background less opaque
-              if (CRNtoClicked[appointment.description] !== 1){
-                // apply to all sections that have the same crn: compare all the idToCRN[id] and check if this is their CRN
+              if (CRNtoClicked[CRN.toString()] !== 1){
+                // apply to all sections that have the same crn
+                // compare all the hashtable[ids] and check if this is their CRN
                 for (var i = 0; i < appointments.length; i++){
-                  if (crn === appointments[i].description){ //crn matches
+                  if (idToCRN[appointments[i].id] === CRN){
                     console.log("first click");
-                    $('#scheduler').jqxScheduler('beginAppointmentsUpdate');
-                    $("#scheduler").jqxScheduler('setAppointmentProperty', appointments[i].id, 'background', 'gray');
-                    $('#scheduler').jqxScheduler('endAppointmentsUpdate');
-                    CRNtoClicked[appointments[i].description] = 1;
-                  }
-                  else {  //crn doesn't match
-                    // $("#scheduler").jqxScheduler('setAppointmentProperty', appointments[i].id, 'background', 'red'); 
+                    CRNtoClicked[CRN.toString()] = 1;
                   }
                 }
               }
@@ -396,8 +386,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               else {
                 // apply to all sections that are linked
                 for (var i = 0; i < appointments.length; i++){
-                  //if (idToCRN[appointments[i].id] === CRN){
-                  if (crn === appointments[i].description){
+                  if (idToCRN[appointments[i].id] === CRN){
                     console.log("second click, should delete");
                     $('#scheduler').jqxScheduler('deleteAppointment', appointments[i].id);
                   }
@@ -410,20 +399,19 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
               // ADD for loop: for days that this section repeats:
               var newappointment = {
                 id: 'id' + sec.id.toString(), //id for calendar
-                description: sec.crn.toString(),  // IS THE CRN!!!!!!!!!!!
+                description: sec.name,  // name of the class ("Artificial Intelligence")
                 location: sec.class_location,
                 subject: sec.name,  // e.g. "CS440"
-                start: sec.class_times[1], //(year, month, day, hour, minute, second)
-                end: sec.class_times[2],
+                start: sec.class_times[0], //(year, month, day, hour, minute, second)
+                end: sec.class_times[1],
                 calendar: "Class 3",
                 resizable: false,
                 draggable: false,
-                readOnly: true,
+                readOnly: true
               };
+              idToCRN[newappointment.id] = sec.crn; // map id to a CRN
               appointments.push(newappointment);
               $('#scheduler').jqxScheduler('addAppointment', newappointment);
-
-              idToCRN[newappointment.id] = sec.crn; // map id to a CRN
               console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
             };
 
@@ -453,9 +441,9 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         ]
     });
 
-     // Test adding section to calendar
-      $scope.addSection($scope.section);
-      $scope.addSection($scope.section2);
+            // Test adding section to calendar
+            $scope.addSection($scope.section);
+            $scope.addSection($scope.section2);
 
     // **** end calendar view
 
