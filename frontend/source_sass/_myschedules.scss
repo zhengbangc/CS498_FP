@@ -18,22 +18,22 @@
 				}
 				@include transition(all 0.3s ease-in-out);
 					&:nth-child(1){
-						background: #dbe9d8;
+						background: $main-theme-lighter3;
 					}
 					&:nth-child(2){
-						background: #c2d4d8;
+						background: $main-theme-lighter1;
 					}
 					&:nth-child(3){
-						background: #f2efe8;
+						background: $main-theme-lighter3;
 					}
 					&:nth-child(4){
-						background: #b0aac2;
+						background: $main-theme-lighter1;
 					}
 					&:nth-child(5){
-						background: #edd9c0;
+						background: $main-theme-lighter3;
 					}
 					&:nth-child(6){
-						background: #DACFE3;
+						background: $main-theme-lighter1;
 					}
 					h3{
 						position: absolute;
@@ -59,7 +59,7 @@
 							padding-right: 20px;
 							font-family: $OpenSans;
 							&:hover{
-								background:#6BACC2;
+								background: $main-theme-darker2;
 								color: white;
 								transform: scale(1.1,1.1);
 								position: relative;

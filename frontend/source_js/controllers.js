@@ -192,9 +192,10 @@
       .then(function(response){
         console.log(response.status);
         if(response.status == 500)
-          $scope.createschedule_response = 'Create schedule failed';
+          $scope.createschedule_response = 'Schedule could not be created';
         else{
-          $scope.createschedule_response = response.data.message;
+          //$scope.createschedule_response = response.data.message;
+          $scope.createschedule_response = 'Schedule created';
           $scope.created = true;
           console.log(response.data.data);
         }

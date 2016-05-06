@@ -2,7 +2,6 @@
 
 	<div class="row text-center main padded">
 	 <h1 class="text-center">Create a Schedule</h1>
-		<p>Create your schedule</p>
 		<p>{{createschedule_response}}</p>
 		<div class="container">
 			<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
@@ -10,16 +9,14 @@
 					<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
 				<label>Please select a semester for this schedule</label>
 				<select required ng-model="semester">
-					<option value="Spring 2016">Spring 2016</option>
 					<option value="Fall 2016">Fall 2016</option>
-					<option value="Spring 2017">Spring 2017</option>
-					<option value="Fall 2017">Fall 2017</option>
-					<option value="Spring 2018">Spring 2018</option>
-					<option value="Fall 2018">Fall 2018</option>
+					<option value="Summer 2016">Summer 2016</option>
+					<option value="Spring 2016">Spring 2016</option>
+					<option value="Winter 2016">Winter 2016</option>
 				</select>
-				<button class="button round" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
+				<button class="button" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
 				<div class="row text-center" ng-if="created">
-					<a href="#/editschedule" class="button round">Edit Schedule</a>
+					<a href="#/editschedule" class="button lighter">Edit Schedule</a>
 				</div>
 			</form>
 		</div>
