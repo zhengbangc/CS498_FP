@@ -1,29 +1,87 @@
-// Display schedules as a grid list
-ul.grid{
+.myschedules{
+	.main{
+		/*margin-top: $nav-height;	// NECESSARY: avoid overlap with nav bar*/
+		padding-top: 40px + $nav-height;	// want some amount of space between bottom of nav bar and top of real content
+		.container{
+			width: 100vw;
+			.semesterRow{
+				height: 100px;
+				width: 80%;
+				padding: 0 0 0 0;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+				margin-top: 10px;
+				&:hover{
+					width:85%;
+					@include transition(all 0.3s ease-in-out);
+				}
+				@include transition(all 0.3s ease-in-out);
+					&:nth-child(1){
+						background: #dbe9d8;
+					}
+					&:nth-child(2){
+						background: #c2d4d8;
+					}
+					&:nth-child(3){
+						background: #f2efe8;
+					}
+					&:nth-child(4){
+						background: #b0aac2;
+					}
+					&:nth-child(5){
+						background: #edd9c0;
+					}
+					h3{
+						position: absolute;
+						display: inline-block;
+						line-height: 100px;
+						font-size: 20px;
+						width: 200px;
+						padding-left: 25px;
+						padding-right: 25px;
+					}
+					&>div{
+						position: absolute;
+						left: 200px;
+						.schedulename{
+							display: inline-block;
+							width: 150px;
+							margin-top: 0px;
+							font-family: $OpenSans;
+							&:hover{
+								background:#3B7A8F;
+								color: white;
+								transform: scale(1.1,1.1);
+								position: relative;
+								z-index: 4;
+							}
+							color: black;
+							line-height: 100px;
+							height: 100px;
+						}
+					}
+			}
+		}
 
-	list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: inline;
+	}
 
-	li {
-		margin: 50px;
-		color: #000000;
-		display: table-cell; 
-		vertical-align: middle;
-		width: $schedule-box-size;
-		height: $schedule-box-size;
-		border: 2px solid $main-theme-lighter3;
-		&:hover{ border: 2px solid $main-theme-darker1; }
-	}	
 
-}
+	/*a.grid{
 
-.main{
-	margin-top: $nav-height;	// NECESSARY: avoid overlap with nav bar
-	padding-top: 40px;	// want some amount of space between bottom of nav bar and top of real content
-}
+		list-style-type: none;
+	    margin: 0;
+	    padding: 0;
+	    display: inline;
 
-.padded{
-	padding: 30px 0px;
+			margin: 50px;
+			color: #000000;
+			display: table-cell; 
+			vertical-align: middle;
+			width: $schedule-box-size;
+			height: $schedule-box-size;
+			border: 2px solid $main-theme-lighter3;
+			&:hover{ border: 2px solid $main-theme-darker1; }
+
+	}*/
 }
