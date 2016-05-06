@@ -1,0 +1,42 @@
+<div class="editUser" ng-controller='EditUserController'>
+
+
+	<div class="createSchedule_Form row text-center">
+		<h1> Edit Your Account </h1>
+        <p id="edituser_response">{{edit_response}}</p>
+		<form data-abide ng-submit="editUserForm.$valid && updateUser()" name="editUserForm">
+			<input type="text" required ng-model="user.name" placeholder="Name">
+			<input type="text" required ng-model="user.email" placeholder="Email">
+			<input type="password" required ng-model="user_password" placeholder="Password">
+			<input type="password" required ng-model="user_password_confirmed" placeholder="Confirm password">
+            <button class="button round" type="submit" id="submit" value="Submit" ng-if="user_password == user_password_confirmed"> Save Changes </button>
+            <button class="button round disabled" type="submit" id="submit" value="Submit" ng-if="user_password != user_password_confirmed"> Passwords must match </button>
+			<button class="button round exit" type="reset" ng-click="close()"> Cancel </button>
+		</form>
+	</div>
+
+
+<!---- Navigation Bar ---->
+    <nav>
+        <a class="button" href="#/home">SCHEDULER</a>
+        <a class="button" href="#/createschedule">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+            <span class="invisible-small"> Create Schedule</span>
+        </a>
+        <a class="button" href="#/myschedules">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
+            <span class="invisible-small"> My Schedules</span>
+        </a>
+
+            <span class="dropdown">
+        <a class="dropbutton button"> 
+            {{ user.name }} <i class="fa fa-chevron-down" aria-hidden="true"></i>
+        </a>
+         <div class="dropdown-content">
+            <a href="#/edituser">Edit Account</a>
+            <a ng-click="logout()">Log Out</a>
+          </div>
+        </span>
+    </nav>
+    <!---- End Navigation Bar ---->
+</div>

@@ -1,29 +1,27 @@
-<div class="createschedule" ng-controller='CreateScheduleController'>
+<div class="createSchedule" ng-controller='CreateScheduleController'>
 
-	<div class="body_container">
-			<div class="header">
-			<h1>Create Schedule</h1>
-			<p>Auto generate a schedule or manually select classes</p>
-			</div>
-			<div class="createWrapper">
-				<form data-abide ng-submit="createSchedule()" name="loginForm" class="login_Form">
-					<label> Please enter a name for this schedule</label>
-						<input type="text" required ng-model="schedule_title" placeholder="Schedule Name">
-					<label>Please select a semester for this schedule</label>
-					<select ng-model="semester">
-						<option value="Spring 2016">Spring 2016</option>
-						<option value="Fall 2016">Fall 2016</option>
-						<option value="Spring 2017">Spring 2017</option>
-					</select>
-					<div class="row">
-						<button class="button columns col-xs-6">Auto</button>
-						<button class="button columns col-xs-6">Manual</button>
-					</div>
-				</form>
-			</div>
-	</div>
+	<div class="row text-center main padded">
+	 <h1 class="text-center">Create a Schedule</h1>
+		<p>{{createschedule_response}}</p>
+		<div class="container">
+			<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
+				<label> Please enter a name for this schedule</label>
+					<input type="text" required ng-model="schedule_name" placeholder="Schedule Name">
+				<label>Please select a semester for this schedule</label>
+				<select required ng-model="semester">
+					<option value="Fall 2016">Fall 2016</option>
+					<option value="Summer 2016">Summer 2016</option>
+					<option value="Spring 2016">Spring 2016</option>
+					<option value="Winter 2016">Winter 2016</option>
+				</select>
+				<button class="button" type="submit" id="submit" value="Submit" ng-if="!created"> Create Schedules </button>
+				<div class="row text-center" ng-if="created">
+					<a href="#/schedule/{{id}}" class="button round">Edit Schedule</a>
+				</div>
+			</form>
+		</div>
 
-
+    </div>
 
  	<!---- Navigation Bar ---->
     <nav>
