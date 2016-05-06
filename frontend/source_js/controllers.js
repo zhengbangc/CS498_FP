@@ -256,6 +256,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
 
   $scope.classes = [];
+  $scope.selectedSections = [];
   Schedules.get($routeParams._id).then(function(response){
       console.log(response.data.data);
       $scope.schedule = response.data.data;
@@ -274,6 +275,20 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         })
       }
 
+      $scope.selectSection = function(cur_section){
+          if (cur_section.ifSelected == 'blue'){
+              cur_section.ifSelected = 'notBlue';
+              $scope.selectedSections = $scope.selectedSections.filter(function (el) {
+                      return el.crn !== cur_section.crn;
+              })
+              console.log($scope.selectedSections);  
+          }
+          else{
+            cur_section.ifSelected = 'blue';
+            $scope.selectedSections.push(cur_section);
+            console.log($scope.selectedSections);
+          }
+      }
     })
 
   $scope.saveSchedule = function(){
@@ -288,6 +303,36 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
 
   CRNtoClicked = new Array();
   // ex: CRNtoClicked['22222'] = 1;
+
+  $scope.sectionsForCalendar = [];
+  $scope.addSections = function (){
+      // $scope.selectedSections.forEach(function(element){
+      //       console.log(element.section_times);
+      //       element.section_times.forEach(function(element){
+      //           console.log(element);
+      //           var day = element[0] +20;
+      //           var starthour = element[1]/60 | 0;
+      //           var startminute = element[1]%60;
+      //           var endhour = element[2]/60 | 0;
+      //           var endminute = element[2]%60;
+      //           $scope.sectionsForCalendar.push({
+      //               'id': element.id,
+      //               'crn': element.crn,
+      //               'name': element.name,
+      //               'class_location': element.section_location,
+      //               'section_code': element.section_code,
+      //               'instructor': element.instructor,
+      //               'credit_hours': element.credit_hours,
+      //               'section_type': element.section_type
+      //               'class_times': [ ['M','W','F'], new Date(2016, 10, day)
+      //           })
+      //       })  
+      // })
+      // console.log($scope.sectionsForCalendar);
+      $scope.selectedSections.forEach(function(element){
+        
+      })
+  }
 
   $scope.section = { 
     'id': 8, 
