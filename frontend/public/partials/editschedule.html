@@ -9,6 +9,9 @@
 		<a data-open="addClassModal" class="button">Add Class</a>
         <a class="button" ng-click="saveSchedule()">Save Schedule</a>
 	</div>
+	<div class="row text-center">
+		<span>CRNs: </span><span ng-repeat="section in schedule.sections">{{ section.crn }} </span>
+	</div>
 
 
 <!-- Add Class Modal -->

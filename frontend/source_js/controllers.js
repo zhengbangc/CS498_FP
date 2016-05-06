@@ -243,25 +243,37 @@
     // for all sections: addSection(section), get the section's info
     $scope.classes = [];
     $scope.selectedSections = [];
+    console.log($routeParams);
     Schedules.get($routeParams._id).then(function(response){
-      console.log(response.data.data);
-      $scope.schedule = response.data.data;
-      console.log("scope.schedule = " + $scope.schedule);
-      console.log("scope.schedule = " + Object.keys($scope.schedule));
+      if(!$scope.fetched) {
+        console.log(response.data.data);
+        $scope.schedule = response.data.data;
+        console.log("scope.schedule = " + $scope.schedule);
+        console.log("scope.schedule = " + Object.keys($scope.schedule));
+      }
     }).then(function(){
 
       var sections = $scope.schedule.sections; 
-      console.log('sections to add:' + sections);
-    //for each section in $scope.schedule.sections, get the section info
-    for(var i=0; i<sections.length; i++){
-      console.log('section retrieved: ' + response.data.data);
-      $scope.addSection(sections[i]);
-    }
+      if(!$scope.fetched) {
 
-    Classes.getByTerm($scope.schedule.term).then(function(response){
-      // console.log(response.data.data);
-      $scope.classes = response.data.data;
-    })
+        Classes.getByTerm($scope.schedule.term).then(function(response){
+          // console.log(response.data.data);
+          $scope.classes = response.data.data;
+        }).then(function(response) {
+          console.log('sections to add:' + sections);
+          //for each section in $scope.schedule.sections, get the section info
+          for(var i=0; i<sections.length; i++){
+            //console.log('section retrieved: ' + response.data.data);
+            var rightCourse = $scope.classes.filter(function(course) {
+              return sections[i]['class'] == course.id;
+            });
+            console.log(rightCourse);
+            $scope.addSection(sections[i], (rightCourse || [{name: '(No Title)'}])[0].name);
+          }
+        });
+        $scope.fetched = true;
+      }
+    });
 
     $scope.selectClass = function(cur_class){
       console.log(cur_class.id);
@@ -285,8 +297,7 @@
         $scope.selectedSections.push(cur_section);
         console.log($scope.selectedSections);
       }
-    }
-  })
+    };
 
     $scope.saveSchedule = function(){
       console.log("schedule saving");
@@ -312,42 +323,42 @@
   CRNtoClicked = new Array();
   // ex: CRNtoClicked['22222'] = 1;
 
-    $scope.sectionsForCalendar = [];
-    $scope.addSections = function (){
-      $scope.selectedSections.forEach(function(element){
-        Classes.get(element.class).then(function(response){
-          console.log(response.data.data.name);
-          $scope.addSection(element, response.data.data.name);
-        })
+  $scope.sectionsForCalendar = [];
+  $scope.addSections = function (){
+    $scope.selectedSections.forEach(function(element){
+      Classes.get(element.class).then(function(response){
+        console.log(response.data.data.name);
+        $scope.addSection(element, response.data.data.name);
       })
-    }
+    })
+  }
 
-    $scope.section = { 
-      'id': 8, 
-      'crn': '88888',
-      'name':'CS 440 Artificial Intelligence', 
-      'term': 'Fall 2016',
-      'section_code': 'ADJ',
-      'instructor': 'Ur Mom',
-      'credit_hours': 3,
-      'section_type': 'Lab',
-      'section_times': [ [1, 600, 660], [3,600,660] ], 
-      'class_location':'123 Sesame St',
-      'restrictions': 'Pre-req: CS 225'
-    };
-    $scope.section2 = { 
-      'id': 9, 
-      'crn': '99999',
-      'name':'CS 357', 
-      'term': 'Fall 2016',
-      'section_code': 'ADJ',
-      'instructor': 'Ur Mom',
-      'credit_hours': 3,
-      'section_type': 'Lab',
-      'section_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
-      'class_location':'Elm St',
-      'restrictions': 'Pre-req: CS 225'
-    };
+  $scope.section = { 
+    'id': 8, 
+    'crn': '88888',
+    'name':'CS 440 Artificial Intelligence', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'section_type': 'Lab',
+    'section_times': [ [1, 600, 660], [3,600,660] ], 
+    'class_location':'123 Sesame St',
+    'restrictions': 'Pre-req: CS 225'
+  };
+  $scope.section2 = { 
+    'id': 9, 
+    'crn': '99999',
+    'name':'CS 357', 
+    'term': 'Fall 2016',
+    'section_code': 'ADJ',
+    'instructor': 'Ur Mom',
+    'credit_hours': 3,
+    'section_type': 'Lab',
+    'section_times': [ ['M','W','F'], new Date(2016, 10, 21, 13, 0, 0), new Date(2016, 10, 21, 13, 50, 0)], 
+    'class_location':'Elm St',
+    'restrictions': 'Pre-req: CS 225'
+  };
 
 
     // ********** CALENDAR STUFF ***************
@@ -440,7 +451,6 @@
               var endTime = times[i][2];
               var endHours = (endTime / 60) | 0;
               var endMinutes = (endTime % 60) | 0;
-              console.log(secname);
               var newappointment = {
                 id: 'id' + sec.id.toString(), //id for calendar
                 description: sec.crn.toString(),  // IS THE CRN!!!!!!!!!!!
@@ -454,7 +464,6 @@
                 readOnly: true,
               };
               CRNtoOrigID[newappointment.description] = Number.parseInt(sec.id);
-              appointments.push(newappointment);
               $('#scheduler').jqxScheduler('addAppointment', newappointment);
               console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
             };
