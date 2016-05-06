@@ -1,12 +1,12 @@
-// Add any custom Sass & CSS here
-
+// background url: "../data/images/follinger.jpg"
 
 .home{
 	position: relative;
 	height: 100vh;
 	weight: 100vw;
 	overflow: hidden;
-	background: linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%);
+	background: url("../data/images/follinger.jpg") no-repeat fixed /*linear-gradient(to bottom, $main-theme-color 0%, $main-theme-color 100%)*/;
+	background-size: cover;
 	.home_container{
 		&>button{
 			position: absolute;

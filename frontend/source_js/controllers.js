@@ -247,6 +247,16 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     'name': 'CS 101 - Hello World'
   };
 
+  $scope.saveSchedule = function(){
+    console.log("schedule saving");
+    //for each thing in assignment, save
+    $scope.schedule.sections = [];
+    for (var i=0; i<appointments.length; i++){
+      $scope.schedule.sections.push(appointments[i]._id);
+    }
+    Schedules.put($scope.schedule);
+  }
+
 
   $scope.section = { 
     'id': 8, 
@@ -293,6 +303,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     var appointments = new Array();
 
     var appointment1 = {
+        _id: 1,
         id: "id1",
         description: "System programming",
         location: "1404 Siebel",
@@ -306,6 +317,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     }
 
     var appointment2 = {
+        _id: 2,
         id: "id2",
         description: "Computer Architecture",
         location: "1404 Siebel",
@@ -319,6 +331,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     }
 
     var appointment3 = {
+        _id: 3,
         id: "id3",
         description: "Numerical Methods",
         location: "1404 Siebel",
@@ -332,6 +345,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
     }
 
     var appointment4 = {
+        _id: 4,
         id: 'id4',
         description: "The Art and Science of Web Programming",
         location: "1404 Siebel",
@@ -344,43 +358,16 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         readOnly: true
     }
 
-    var appointment5 = {
-        id: 'id5',
-        description: "Introduction to Horticulture",
-        location: "1404 Siebel",
-        subject: "Hort 100",
-        calendar: "Class 5",
-        start: new Date(2016, 10, 25, 15, 0, 0),
-        end: new Date(2016, 10, 25, 17, 0, 0),
-        resizable: false,
-        draggable: false,
-        readOnly: true
-    }
-
-    var appointment6 = {
-        id: 'id6',
-        description: "",
-        location: "",
-        subject: "Interview with Nancy",
-        calendar: "Class 6",
-        start: new Date(2016, 10, 26, 14, 0, 0),
-        end: new Date(2016, 10, 26, 16, 0, 0),
-        resizable: false,
-        draggable: false,
-        readOnly: true
-    }
     appointments.push(appointment1);
     appointments.push(appointment2);
     appointments.push(appointment3);
     appointments.push(appointment4);
-    appointments.push(appointment5);
-    appointments.push(appointment6);
 
-    // prepare the data -- change this to fit our data!!!!!!!!!!!!!
     var source =
     {
         dataType: "array",
         dataFields: [
+            { name: '_id', type: 'int' },
             { name: 'id', type: 'string' },
             { name: 'description', type: 'string' },
             { name: 'location', type: 'string' },
@@ -395,7 +382,6 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
         ],
         id: 'id',
         localData: appointments
-        //url: '../sampledata/appointments.txt' //use this to get data from a file! (e.g. a .json file)
     };
     var adapter = new $.jqx.dataAdapter(source);
     $("#scheduler").jqxScheduler({
@@ -416,7 +402,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
           return data;
         },*/
         // *** DIALOG / MODAL WINDOW:
-        editDialogCreate: function (dialog, fields, editAppointment) {
+        /*editDialogCreate: function (dialog, fields, editAppointment) {
           // hide repeat option
           fields.repeatContainer.hide();
           // hide status option
@@ -434,7 +420,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
           fields.subjectLabel.html("Class");
           fields.locationLabel.html("Where");
       
-         },  // end modal/dialog window   
+         },  // end modal/dialog window   */
         ready: function () {
 
             $scope.apptID = "id1";
@@ -465,6 +451,7 @@ mp4Controllers.controller('EditScheduleController', ['$scope', '$http', 'Schedul
             $scope.addSection = function(sec){
               // ADD for loop: for days that this section repeats:
               var newappointment = {
+                _id: sec.id,
                 id: 'id' + sec.id.toString(),
                 description: sec.name,  // name of the class ("Artificial Intelligence")
                 location: sec.class_location,

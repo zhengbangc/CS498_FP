@@ -20,7 +20,33 @@ mp4Services.factory('Schedules', function($window, $http){
             var promise = $http({
                 method: 'POST',
                 url: 'http://scheduler.intense.io/api/schedules',
-                data: $.param({name: schedulename, user: tokenObject.id, term: semester, token: $window.sessionStorage['jwtToken']}),
+                data: $.param({
+                    name: schedulename, 
+                    user: tokenObject.id, 
+                    term: semester, 
+                    token: $window.sessionStorage['jwtToken']
+                }),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            }).then(function(response){
+                
+                return response;
+            }, function(response){
+                return response;
+            });
+            return promise;
+        },
+        put: function(schedule){  //modify a schedule
+            var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
+            var promise = $http({
+                method: 'PUT',
+                url: 'http://scheduler.intense.io/api/schedules/' + schedule.id.toString(),
+                data: $.param({
+                    name: schedule.name, 
+                    id: tokenObject.id, 
+                    term: schedule.semester, 
+                    sections: schedule.sections, 
+                    token: $window.sessionStorage['jwtToken']
+                }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             }).then(function(response){
                 

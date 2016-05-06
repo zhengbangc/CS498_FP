@@ -5,6 +5,11 @@
 	padding: 10px;
 }
 
+#addClassModal{
+	background: rgba(255,255,255,0.95);
+	border: 1px solid $main-theme-lighter3;
+}
+
 .calendar{
 	background: $main-theme-darker1;
 	min-height: 600px;
