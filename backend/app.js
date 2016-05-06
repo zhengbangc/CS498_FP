@@ -321,7 +321,11 @@ schedulesRoute.get(function(req, res) {
   });
 });
 
-schedulesRoute.post(function(req, res) {
+schedulesRoute.post(authenticate, function(req, res) {
+	if(req.user.id != req.body.user) {
+		res.status(403);
+		res.json({message: 'Forbidden', data: []});
+	}
 	if(!req.body.name || !req.body.user || !req.body.term) {
 		res.status(500);
 		return res.json({message: 'Missing a parameter', data: []});
@@ -356,7 +360,11 @@ scheduleRoute.get(function(req, res) {
   });
 });
 
-scheduleRoute.put(function(req, res) {
+scheduleRoute.put(authenticate, function(req, res) {
+	if(req.user.id != req.body.user) {
+		res.status(403);
+		res.json({message: 'Forbidden', data: []});
+	}
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
       res.status(404);
@@ -376,7 +384,11 @@ scheduleRoute.put(function(req, res) {
   });
 });
 
-scheduleRoute.delete(function(req, res) {
+scheduleRoute.delete(authenticate, function(req, res) {
+	if(req.user.id != req.body.user) {
+		res.status(403);
+		res.json({message: 'Forbidden', data: []});
+	}
   Schedule.findById(req.params.id).then(function(schedule) {
     if(!schedule) {
       res.status(404);
