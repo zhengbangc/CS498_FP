@@ -130,8 +130,9 @@ mp4Controllers.controller('EditUserController', ['$scope','$http','$window', 'Us
     //TODO: get the current user and get the schedule array!
     Users.get().then(function(response){
       var cur_user = response.data.data;
+      $scope.user = cur_user;
       console.log("the schedule array in the user object is " + cur_user.schedules.toString());
-      Users.updateUser($scope.user_name, $scope.user_email, $scope.user_password)
+      Users.updateUser($scope.user.name, $scope.user.email, $scope.user_password)
       .then(function(response){
         if(response.status == 200){
           Users.get().then(function(response){

@@ -1,12 +1,12 @@
 <div class="editUser" ng-controller='EditUserController'>
 
 
-	<div class="row text-center">
+	<div class="createSchedule_Form row text-center">
 		<h1> Edit Your Account </h1>
         <p id="edituser_response">{{edit_response}}</p>
 		<form data-abide ng-submit="editUserForm.$valid && updateUser()" name="editUserForm">
-			<input type="text" required ng-model="user_name" placeholder="Name">
-			<input type="text" required ng-model="user_email" placeholder="Email">
+			<input type="text" required ng-model="user.name" placeholder="Name">
+			<input type="text" required ng-model="user.email" placeholder="Email">
 			<input type="password" required ng-model="user_password" placeholder="Password">
 			<input type="password" required ng-model="user_password_confirmed" placeholder="Confirm password">
             <button class="button round" type="submit" id="submit" value="Submit" ng-if="user_password == user_password_confirmed"> Save Changes </button>
