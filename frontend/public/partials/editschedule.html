@@ -24,14 +24,14 @@
 					</li>
 				</ul>
 			<ul class="classSections">
-				<li class="text-center" ng-repeat="section in sections">
+				<li class="text-center" ng-repeat="section in sections" ng-click="selectSection(section)" ng-class="section.ifSelected">
 					<strong>{{section.section_type}}</strong> 
 					<span ng-repeat="time in section.section_times">{{days[time[0]]}} {{time[1]/60 | number : 0}}:{{time[1]%60 >= 10 ? time[1]%60 : "0"+time[1]%60}} to {{time[2]/60 | number : 0}}:{{time[2]%60 >= 10 ? time[2]%60 : "0"+time[2]%60}}
 					</span>
 				</li>
 			</ul>
 		</div>
-		<button class="button round" ng-click="addClass()">Add Class</button>
+		<button class="button round" ng-click="addSections()">Add Sections</button>
 		<button class="close-button" aria-label="Close modal" type="button" onclick="$('#addClassModal').foundation('close');">
 		<span aria-hidden="true">&times;</span>
 		</button>
