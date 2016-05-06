@@ -13,7 +13,8 @@
     "passport-local": "^1.0.0",
     "pg": "^4.5.3",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.21.0"
+    "sequelize": "^3.21.0",
+    "uiuc": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {

@@ -110,11 +110,12 @@ var classesRoute = router.route('/class');
 classesRoute.get(function(req, res) {
   Class.findAll({
     where: {
-      name: req.query.name
+      term: req.query.term
     },
-    include: [{
-	    model: Section, as: 'Sections'
-    }]
+    attributes: [
+      'id',
+      'name'  
+    ]
   }).then(function(classes) {
     res.json({message: 'OK', data: classes});
   }).catch(function(err) {
@@ -179,7 +180,6 @@ sectionRoute.post(function(req, res) {
 		  time: req.body.time
 		})
 		.then(function(obj) {
-			class.addSection(obj);
 			res.statusCode = 201;
 			return res.json({message: 'created', data: [obj]});
 		});
@@ -205,7 +205,7 @@ sectionRoute.get(function(req, res) {
 //User route
 var userRoute = router.route('/user/:id');
 userRoute.get(function(req, res) {
-	User.findOne({where: {id: req.params.id}, include: [{model: Schedule, as: 'Schedules'}]}).then(function(user) {
+	User.findOne({where: {id: req.params.id}, include: [{model: Schedule, as: 'Schedules', attributes: ['id', 'name', 'term']}]}).then(function(user) {
 		if(!user) {
 			res.status(404);
 			res.json({message: 'User not found', data: [{id: req.params.id}]});
@@ -222,7 +222,7 @@ userRoute.get(function(req, res) {
 userRoute.put(authenticate, function(req, res) {
 	if(req.user.id != req.params.id) {
 		res.status(403);
-		res.json({message: 'Unauthorized', data: []});
+		res.json({message: 'Forbidden', data: []});
 	}
 	User.findById(req.params.id).then(function(user) {
 		if(!user) {
@@ -322,15 +322,20 @@ schedulesRoute.get(function(req, res) {
 });
 
 schedulesRoute.post(function(req, res) {
+	if(!req.body.name || !req.body.user || !req.body.term) {
+		res.status(500);
+		return res.json({message: 'Missing a parameter', data: []});
+	}
         Schedule.create({
                 name: req.body.name,
-                user: req.body.user
+		user: parseInt(req.body.user),
+		term: req.body.term
         }).then(function(schedule) {
                 res.statusCode = 201;
                 return res.json({message: 'Schedule added to database', data: schedule});
         }).catch(function(err) {
 		res.status(500);
-		res.json({message: getError(err), data: []});
+		return res.json({message: getError(err), data: []});
         });
 });
 
@@ -358,8 +363,9 @@ scheduleRoute.put(function(req, res) {
       res.json({message: 'Schedule not found', data: []});
     }
     schedule.update({
-      name: req.body.name,
-      user: req.body.user
+      name: req.body.name || schedule.name,
+      user: req.body.user || schedule.user,
+      term: req.body.term || schedule.term
     }).then(function(newSchedule) {
       res.status(200);
       res.json({message: 'Schedule updated', data: newSchedule});

@@ -43,7 +43,7 @@ var Class = sequelize.define('class', {
 		allowNull: false
 	},
 	description: {
-		type: Sequelize.STRING,
+		type: Sequelize.STRING(4000),
 		field: 'description'
 	}
 }, {
@@ -65,9 +65,17 @@ var Section = sequelize.define('section', {
 		field: 'section_code',
 		allowNull: false
 	},
-	class_times: {
-		type: Sequelize.ARRAY(Sequelize.RANGE(Sequelize.DATE)),
-		field: 'class_times',
+	section_location: {
+		type: Sequelize.STRING,
+		field: 'section_location'
+	},
+	section_times: {
+		type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER)),
+		field: 'section_times',
+	},
+	instructor: {
+		type: Sequelize.STRING,
+		field: 'instructor'
 	},
 	section_type: {
 		type: Sequelize.STRING,
@@ -78,8 +86,12 @@ var Section = sequelize.define('section', {
 		field: 'credit_hours'
 	},
 	description: {
-		type: Sequelize.STRING,
+		type: Sequelize.STRING(4000),
 		field: 'description'
+	},
+	restrictions: {
+		type: Sequelize.STRING(1000),
+		field: 'restrictions'
 	}
 }, {
 	freezeTableName: true
@@ -91,6 +103,16 @@ var Schedule = sequelize.define('schedule', {
 		field: 'name',
 		allowNull: false
 	},
+	user: {
+		type: Sequelize.INTEGER,
+		field: 'user',
+		allowNull: false
+	},
+	term: {
+		type: Sequelize.STRING,
+		field: 'term',
+		allowNull: false
+	}
 /*
 	classes: {
 		type: Sequelize.ARRAY(Sequelize.INTEGER),
@@ -103,10 +125,11 @@ var Schedule = sequelize.define('schedule', {
 */
 });
 
-User.hasMany(Schedule, {as: 'Schedules'});
-Schedule.belongsTo(User);
+User.hasMany(Schedule, {as: 'Schedules', foreignKey: 'user'});
+Schedule.belongsTo(User, {as: 'User', foreignKey: 'user'});
 
-Class.hasMany(Section, {as: 'Sections'});
+Class.hasMany(Section, {as: 'Sections', foreignKey: 'class'});
+Section.belongsTo(Class, {as: 'Class', foreignKey: 'class'});
 
 Section.belongsToMany(Schedule, {through: 'SectionsInSchedules'});
 Class.belongsToMany(Schedule, {through: 'ClassesInSchedules'});
@@ -117,6 +140,7 @@ Promise.join(Schedule.sync({force: true}), function() {console.log('Schedule tab
 Promise.join(Class.sync({force: true}), function() {console.log('Class table created')});
 Promise.join(Section.sync({force: true}), function() {console.log('Section table created')});
 */
+//sequelize.sync({force: true}).then(function() {console.log('Tables created')});
 sequelize.sync().then(function() {console.log('Tables created')});
 
 module.exports.sequelize = sequelize;
