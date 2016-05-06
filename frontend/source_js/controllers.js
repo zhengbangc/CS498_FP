@@ -360,9 +360,6 @@
     'restrictions': 'Pre-req: CS 225'
   };
 
-
-    // ********** CALENDAR STUFF ***************
-
     var appointments = new Array();
 
     var source =
