@@ -33,14 +33,17 @@ mp4Services.factory('Schedules', function($window, $http){
         },
         put: function(schedule){  //modify a schedule
             var tokenObject = parseJWT($window.sessionStorage['jwtToken']);
+            console.log('Here in the service to put schedule');
+            console.log(schedule);
             var promise = $http({
                 method: 'PUT',
                 url: 'http://scheduler.intense.io/api/schedules/' + schedule.id.toString(),
                 data: $.param({
                     name: schedule.name, 
-                    id: tokenObject.id, 
-                    term: schedule.semester, 
-                    sections: schedule.sections, 
+                    id: parseInt(schedule.id),
+                    user: parseInt(schedule.user), 
+                    term: schedule.term, 
+                    sections: schedule.sections.map(function(n) {return parseInt(n, 10)}), 
                     token: $window.sessionStorage['jwtToken']
                 }),
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'}

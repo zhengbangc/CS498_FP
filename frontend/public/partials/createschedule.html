@@ -1,9 +1,9 @@
-<div class="myschedules" ng-controller='CreateScheduleController'>
+<div class="createSchedule" ng-controller='CreateScheduleController'>
 
-	<div class="main">
+	<div class="row text-center main padded">
 	 <h1 class="text-center">Create a Schedule</h1>
-		<p>Auto-generate a schedule or manually select classes</p>
-		<p id="createschedule_response">{{createschedule_response}}</p>
+		<p>Create your schedule</p>
+		<p>{{createschedule_response}}</p>
 		<div class="container">
 			<form data-abide ng-submit="createScheduleForm.$valid && createSchedule()" name="createScheduleForm" class="createSchedule_Form">
 				<label> Please enter a name for this schedule</label>

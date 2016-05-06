@@ -68,7 +68,7 @@
           $window.location.href = '#/myschedules';
         },1000);
       }
-      
+
     })
   }
 
@@ -212,22 +212,8 @@
       $window.location.href = '#/home';
     }
 
-
   }]);
 
-    mp4Controllers.controller('AutoScheduleController', ['$scope', '$http', 'Schedules', '$window' , function($scope, $http, Schedules, $window) {
-
-    /*  Classes.getBySemester().success(function(data){
-    $scope.classes = data.data;
-    });
-    */
-    // Need to get all classes for the selected semester
-    $scope.schedule = { 'name': 'My First Schedule', 'id':666, 'preview': 'preview' };
-    $scope.autoSchedule = function(){
-
-    };
-
-  }]);
 
     mp4Controllers.controller('EditScheduleController', 
       ['$scope', '$http', 'Schedules','Classes', 'Users', 'Sections', '$window','$routeParams', 
@@ -306,14 +292,25 @@
       console.log("schedule saving");
     //for each thing in assignment, save
     $scope.schedule.sections = [];
+    appointments =  $("#scheduler").jqxScheduler('getAppointments');
     for (var i=0; i<appointments.length; i++){
-      $scope.schedule.sections.push(appointments[i]._id);
+      var realID = parseInt(CRNtoOrigID[appointments[i].description]);
+      console.log('realID = ' + realID);
+      $scope.schedule.sections.push(realID);
     }
-    Schedules.put($scope.schedule);
+    $scope.schedule.sections = $scope.schedule.sections.filter(function(item, i, ar) { return ar.indexOf(item) === i; });
+    console.log('schedule to be saved: ');
+    console.log($scope.schedule);
+    Schedules.put($scope.schedule).then(function(response){
+      console.log('Put schedule');
+    });
   }
 
+  CRNtoOrigID = new Array();
+
+  //idToRealId = new Array();
   CRNtoClicked = new Array();
-    // ex: CRNtoClicked['22222'] = 1;
+  // ex: CRNtoClicked['22222'] = 1;
 
     $scope.sectionsForCalendar = [];
     $scope.addSections = function (){
@@ -456,7 +453,7 @@
                 draggable: false,
                 readOnly: true,
               };
-
+              CRNtoOrigID[newappointment.description] = Number.parseInt(sec.id);
               appointments.push(newappointment);
               $('#scheduler').jqxScheduler('addAppointment', newappointment);
               console.log('Added section to calendar (appointment id: ' + newappointment.id + ')');
